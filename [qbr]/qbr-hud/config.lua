@@ -3,6 +3,10 @@ Config.MinimumStress = 50 -- Minimum Stress Level For Screen Shaking
 
 Config.UpdateInterval = 10 -- Min Update Food and Water
 
+-- SERVEUR DEV : plus jamais faim/soif (la barre reste affichée mais ne descend plus, aucun dégât de vie associé).
+-- Remettre à false pour retrouver le comportement normal (ex. avant la mise en prod).
+Config.DisableHungerThirst = true
+
 -- Stress
 Config.Intensity = {
     [1] = {min = 50, max = 60,  intensity = 0.12},

@@ -1,12 +1,12 @@
 local QBCore = exports['qbr-core']
 
 local databaseReady = false
-local Sessions = {}   -- [source] = { token, citizenid, name, paid, startedAt, expires }
-local Cooldowns = {}  -- [citizenid] = timestamp (GetGameTimer) de fin d'attente
+local Sessions = {}
+local Cooldowns = {}
+
+local ActiveSrc = nil
 
 local function Now() return GetGameTimer() end
-
-local function Log(text) print(('[sunny_rodeo] %s'):format(text)) end
 
 local function Clamp(v, lo, hi) return math.max(lo, math.min(hi, v)) end
 
@@ -30,7 +30,6 @@ local function Notify(target, text, success)
     end
 end
 
--- NIVEAUX --------------------------------------------------------------------
 local Levels = {}
 for i, l in ipairs(Config.Levels) do
     Levels[i] = { xp = tonumber(l.xp) or 0, title = tostring(l.title or ('Niveau ' .. i)) }
@@ -50,9 +49,8 @@ local function LevelOf(xp)
     return { level = idx, title = cur.title, xp = xp, from = cur.xp, to = nxt and nxt.xp or nil }
 end
 
--- BASE DE DONNEES -----------------------------------------------------------------
 CreateThread(function()
-    local ok, err = pcall(function()
+    local ok = pcall(function()
         MySQL.query.await([[CREATE TABLE IF NOT EXISTS `rodeo_players` (
             `citizenid` varchar(50) NOT NULL,
             `name` varchar(100) NOT NULL,
@@ -80,8 +78,6 @@ CreateThread(function()
     end)
     if ok then
         databaseReady = true
-    else
-        Log('base de données indisponible : ' .. tostring(err))
     end
 end)
 
@@ -92,7 +88,6 @@ local function RegisterCallback(name, handler)
         end
         local ok, result = pcall(handler, source, data)
         if not ok then
-            Log(tostring(result))
             result = { ok = false, error = 'Une erreur serveur est survenue. Réessaie dans un instant.' }
         end
         cb(result or { ok = false, error = 'Opération incomplète.' })
@@ -116,7 +111,6 @@ local function HasAdminGroup(src)
     return false
 end
 
--- TOUR ---------------------------------------------------------------------------
 RegisterCallback('sunny_rodeo:server:Start', function(src)
     local Player = QBCore:GetPlayer(src)
     if not Player then return { ok = false, error = 'Joueur introuvable.' } end
@@ -126,6 +120,10 @@ RegisterCallback('sunny_rodeo:server:Start', function(src)
     local session = Sessions[src]
     if session and session.expires > Now() then
         return { ok = false, error = 'Un tour est déjà en cours.' }
+    end
+
+    if ActiveSrc and ActiveSrc ~= src and Sessions[ActiveSrc] and Sessions[ActiveSrc].expires > Now() then
+        return { ok = false, error = ('%s est déjà sur le buffle, attends que le rodéo se termine.'):format(Sessions[ActiveSrc].name or 'Quelqu\'un') }
     end
 
     local wait = (Cooldowns[cid] or 0) - Now()
@@ -147,15 +145,20 @@ RegisterCallback('sunny_rodeo:server:Start', function(src)
         startedAt = Now(),
         expires = Now() + (Config.Ride.MaxSeconds + 90) * 1000,
     }
+    ActiveSrc = src
     return { ok = true, token = token, price = price, level = LevelOf(0).title }
 end)
 
--- Le tour n'a pas pu démarrer côté client (ex. modèle de buffle introuvable) : remboursement.
+local function ReleaseActive(src)
+    if ActiveSrc == src then ActiveSrc = nil end
+end
+
 RegisterNetEvent('sunny_rodeo:server:Cancel', function(token)
     local src = source
     local session = Sessions[src]
     if not session or session.token ~= token then return end
     Sessions[src] = nil
+    ReleaseActive(src)
     if session.paid > 0 then
         local Player = QBCore:GetPlayer(src)
         if Player and Player.PlayerData.citizenid == session.citizenid then
@@ -184,6 +187,7 @@ RegisterCallback('sunny_rodeo:server:Finish', function(src, data)
         return { ok = false, error = 'Aucun tour en cours.' }
     end
     Sessions[src] = nil
+    ReleaseActive(src)
 
     local Player = QBCore:GetPlayer(src)
     if not Player or Player.PlayerData.citizenid ~= session.citizenid then
@@ -192,19 +196,18 @@ RegisterCallback('sunny_rodeo:server:Finish', function(src, data)
     local cid = session.citizenid
     Cooldowns[cid] = Now() + math.max(0, tonumber(Config.Cooldown) or 0) * 1000
 
-    -- la durée annoncée ne peut pas dépasser le temps réellement écoulé depuis le départ
     local elapsed = Now() - session.startedAt
     local ms = math.floor(Clamp(tonumber(data.ms) or 0, 0, math.min(elapsed + 1500, Config.Ride.MaxSeconds * 1000)))
     local reason = REASONS[data.reason] and data.reason or 'fall'
-    -- le score (épreuves réussies) ne peut pas dépasser le nombre d'épreuves possibles dans ce temps (pause minimale entre deux épreuves)
+
     local maxCombos = math.floor(ms / math.max(1, Config.Ride.GapMin)) + 1
     local combos = math.floor(Clamp(tonumber(data.combos) or 0, 0, maxCombos))
 
     local counted = ms >= Config.MinRideMs
     local seconds = ms / 1000
-    local xp, cash, record, rank = 0, 0, false, nil
+    local xp, record, rank = 0, false, nil
     local prev = MySQL.single.await('SELECT best_ms, best_combo, xp FROM rodeo_players WHERE citizenid = ?', { cid })
-    -- le classement se fait sur le SCORE d'une manche = nombre d'épreuves réussies (colonne best_combo)
+
     local prevBest, prevXp = prev and prev.best_combo or 0, prev and prev.xp or 0
     local bestScore = prevBest
 
@@ -223,9 +226,6 @@ RegisterCallback('sunny_rodeo:server:Finish', function(src, data)
         MySQL.insert.await('INSERT INTO rodeo_rides (citizenid, duration_ms, combos, xp, reason) VALUES (?, ?, ?, ?, ?)',
             { cid, ms, combos, xp, reason })
 
-        cash = Round2(math.min(Config.Reward.max, combos * Config.Reward.perCombo) + (record and prevBest > 0 and Config.Reward.recordBonus or 0))
-        if cash > 0 then Player.Functions.AddMoney('cash', cash, 'rodeo-gain') end
-
         rank = tonumber(MySQL.scalar.await('SELECT COUNT(*) + 1 FROM rodeo_players WHERE best_combo > ?', { bestScore })) or 1
 
         if record and rank == 1 then
@@ -240,13 +240,11 @@ RegisterCallback('sunny_rodeo:server:Finish', function(src, data)
     local before, after = LevelOf(prevXp), LevelOf(newXp)
     return {
         ok = true, ms = ms, combos = combos, reason = reason, counted = counted,
-        xp = xp, cash = cash, record = record and prevBest > 0, first = record and prevBest == 0,
+        xp = xp, record = record and prevBest > 0, first = record and prevBest == 0,
         bestScore = bestScore, rank = rank, level = after, levelUp = after.level > before.level,
     }
 end)
 
--- CLASSEMENT -------------------------------------------------------------------------
--- Colonne (classement général) et agrégat (7 derniers jours) de chaque tri : liste fixe, jamais issue du client.
 local SORTS = {
     time  = { col = 'best_ms',    week = 'MAX(r.duration_ms)' },
     combo = { col = 'best_combo', week = 'MAX(r.combos)' },
@@ -300,20 +298,19 @@ RegisterCallback('sunny_rodeo:server:Board', function(src, data)
     }
 end)
 
--- ADMIN --------------------------------------------------------------------------------
 RegisterCommand('rodeoreset', function(src, args)
     if not HasAdminGroup(src) then return end
     if args[1] ~= 'oui' then
-        local msg = 'Cette commande efface TOUT le classement du rodéo. Tape /rodeoreset oui pour confirmer.'
-        if src == 0 then print(msg) else Notify(src, msg, false) end
+        if src ~= 0 then Notify(src, 'Cette commande efface TOUT le classement du rodéo. Tape /rodeoreset oui pour confirmer.', false) end
         return
     end
     MySQL.query.await('TRUNCATE TABLE `rodeo_rides`')
     MySQL.query.await('TRUNCATE TABLE `rodeo_players`')
     Cooldowns = {}
-    if src == 0 then Log('classement remis à zéro') else Notify(src, 'Classement du rodéo remis à zéro.', true) end
+    if src ~= 0 then Notify(src, 'Classement du rodéo remis à zéro.', true) end
 end, false)
 
 AddEventHandler('playerDropped', function()
     Sessions[source] = nil
+    ReleaseActive(source)
 end)

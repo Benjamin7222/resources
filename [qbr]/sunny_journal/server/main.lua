@@ -68,14 +68,24 @@ local function CleanText(value, maxLength)
     return value
 end
 
+-- Liens Discord interdits : cdn.discordapp.com / media.discordapp.net expirent au bout de quelques heures (URLs signées).
+local DISCORD_HOSTS = { 'discordapp.com', 'discordapp.net', 'discord.com', 'discord.gg' }
+local function IsDiscordHost(host)
+    for _, domain in ipairs(DISCORD_HOSTS) do
+        if host == domain or host:sub(-(#domain + 1)) == '.' .. domain then return true end
+    end
+    return false
+end
+
 local function CleanUrl(value)
     if type(value) ~= 'string' then return nil end
     value = value:gsub('^%s+', ''):gsub('%s+$', '')
     if #value == 0 or #value > Config.MaxUrlLength then return nil end
     if not value:find('^https?://') then return nil end
     if value:find('[%s%c"\'<>`\\]') then return nil end
+    local host = (value:match('^https?://([^/:?#]+)') or ''):lower()
+    if IsDiscordHost(host) then return nil, 'discord' end
     if #Config.AllowedHosts > 0 then
-        local host = (value:match('^https?://([^/:?#]+)') or ''):lower()
         local allowed = false
         for _, allowedHost in ipairs(Config.AllowedHosts) do
             if host == allowedHost:lower() then
@@ -134,8 +144,11 @@ local function ValidateEdition(data, Player)
     end
     local pages = {}
     for i, url in ipairs(data.pages) do
-        local clean = CleanUrl(url)
-        if not clean then return nil, 'Page ' .. i .. ' : le lien de l\'image est invalide.' end
+        local clean, cleanErr = CleanUrl(url)
+        if not clean then
+            if cleanErr == 'discord' then return nil, 'Page ' .. i .. ' : les liens Discord sont interdits (ils expirent au bout de quelques heures). Utilise un autre hébergeur d\'images (imgur, imgbb, etc.).' end
+            return nil, 'Page ' .. i .. ' : le lien de l\'image est invalide.'
+        end
         pages[#pages + 1] = { url = clean }
     end
 

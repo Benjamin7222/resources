@@ -445,7 +445,6 @@ function showResult(d) {
         }
         if (s.counted) {
             add(`+${s.xp} XP`, 'Expérience gagnée');
-            add(s.cash > 0 ? `${s.cash} $` : '0 $', 'Gain');
             add(`n°${s.rank}`, 'Position au classement');
         } else {
             add('—', 'Manche trop courte : non comptée');

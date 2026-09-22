@@ -59,6 +59,9 @@ AddStateBagChangeHandler('isLoggedIn', ('player:%s'):format(sid), function(_, _,
     cid = exports['qbr-core']:GetPlayerData().citizenid
     local Data = GetResourceKvpString(cid)
     CurrentStatus = Data and json.decode(Data) or DefaultStatus
+    if Config.DisableHungerThirst then
+        CurrentStatus.hunger, CurrentStatus.thirst = 100, 100
+    end
 end)
 
 ----------------------------------------------------------------------------
@@ -115,7 +118,7 @@ end)
 CreateThread(function()
     local FoodUpdate, count = Config.UpdateInterval * (60 / 5), 0
     while true do
-        if isLoggedIn then
+        if isLoggedIn and not Config.DisableHungerThirst then
             if CurrentStatus['hunger'] <= 0 or CurrentStatus['thirst'] <= 0 then
                 local ped = PlayerPedId()
                 local currentHealth = GetEntityHealth(ped)
