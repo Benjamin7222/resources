@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Sunny Rodéo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- CLASSEMENT -->
+<section id="board" class="poster hidden" aria-label="Classement du rodéo">
+    <header class="poster-head">
+        <p class="kicker">Grand concours de</p>
+        <h1>RODÉO</h1>
+        <p class="arena" id="arena"></p>
+        <button id="closeBoard" class="btn ghost" type="button">Fermer</button>
+    </header>
+
+    <div class="controls">
+        <div class="tabs" id="sortTabs">
+            <button type="button" data-sort="combo" class="on">Meilleur score</button>
+            <button type="button" data-sort="level">Niveau</button>
+        </div>
+        <div class="tabs small" id="periodTabs">
+            <button type="button" data-period="week">7 jours</button>
+            <button type="button" data-period="all" class="on">Général</button>
+        </div>
+    </div>
+
+    <div class="layout">
+        <div class="table-wrap">
+            <div class="thead"><span>#</span><span>Cavalier</span><span>Niveau</span><span class="right" id="valueHead">Épreuves</span></div>
+            <ol id="rows" class="rows"></ol>
+            <p id="empty" class="empty hidden">Personne n'a encore tenu en selle. Sois le premier !</p>
+        </div>
+
+        <aside class="card" id="me">
+            <h2>Ma fiche</h2>
+            <div id="meBody"></div>
+        </aside>
+    </div>
+</section>
+
+<!-- TOUR EN COURS -->
+<section id="ride" class="hidden" aria-live="polite">
+    <div id="vignette" class="vignette"></div>
+    <div id="flash" class="flash"></div>
+
+    <!-- carton de titre -->
+    <div id="intro" class="intro hidden">
+        <p class="intro-kicker">Grand rodéo</p>
+        <h2 id="introName"></h2>
+        <span class="intro-rule"></span>
+    </div>
+
+    <!-- chronomètre + prise -->
+    <div class="hud">
+        <div class="clock" id="clock">
+            <span class="clock-label">Temps restant</span>
+            <div class="clock-time"><span id="timer">0,0</span><small>s</small></div>
+            <span id="penalty" class="penalty"></span>
+            <div class="streak" id="combo"><b id="comboNum">0</b><span>réussies</span></div>
+        </div>
+        <div class="strap" id="strap">
+            <span class="strap-label">Prise</span>
+            <div class="strap-bar">
+                <i id="gripBar"></i>
+                <u style="left:25%"></u><u style="left:50%"></u><u style="left:75%"></u>
+            </div>
+        </div>
+    </div>
+
+    <!-- séquence de flèches + mèche -->
+    <div id="challenge" class="challenge hidden">
+        <div id="arrows" class="arrows"></div>
+        <div class="fuse"><div class="fuse-line"><i id="tBar"><b class="spark"></b></i></div></div>
+    </div>
+
+    <div id="feedback" class="feedback"><span id="fbText"></span><small id="fbSub"></small></div>
+    <div id="countdown" class="countdown hidden"></div>
+
+    <p class="hint" id="hint">
+        <kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> ou <kbd>Q</kbd><kbd>Z</kbd><kbd>S</kbd><kbd>D</kbd> suivre la séquence
+        <span class="sep">·</span> <kbd>⌫</kbd> lâcher prise
+    </p>
+</section>
+
+<!-- RESULTAT -->
+<section id="result" class="poster result hidden" aria-label="Résultat du tour">
+    <p class="kicker" id="resKicker"></p>
+    <h1 id="resTitle"></h1>
+    <div class="big"><span id="resTime">0</span><small>épreuves enchaînées</small></div>
+    <div id="resBanner" class="banner hidden"></div>
+    <ul class="stats" id="resStats"></ul>
+    <div id="resLevel" class="levelbox hidden">
+        <div class="lvl-line"><b id="resLvlTitle"></b><span id="resXp"></span></div>
+        <div class="bar gold"><i id="resLvlBar"></i></div>
+    </div>
+    <p id="resError" class="error hidden"></p>
+    <button id="resClose" class="btn" type="button">Continuer <small>(Entrée)</small></button>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

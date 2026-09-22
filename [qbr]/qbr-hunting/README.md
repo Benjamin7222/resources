@@ -1,0 +1,2 @@
+# qbr-hunting
+Hunting resource

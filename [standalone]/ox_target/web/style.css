@@ -1,0 +1,117 @@
+@font-face {
+  font-family: 'RDR Lino Regular';
+  src: url('font/RDRLino-Regular.ttf') format('truetype');
+}
+
+:root {
+  --color-default: #cfd2da;
+  --color-hover: white;
+}
+
+body {
+  visibility: hidden;
+  user-select: none;
+  white-space: nowrap;
+  margin: 0;
+  user-select: none;
+  overflow: hidden;
+}
+
+p {
+  margin: 0;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 40;
+}
+
+#targeting-crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+}
+
+#targetingImage {
+  width: 36px;
+  height: 36px;
+  transition: all 0.2s ease-in-out;
+  filter: brightness(0.8);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+#targetingImage.has-target {
+  filter: brightness(1.2) drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+  transform: scale(1.1);
+  animation: none;
+}
+
+#options-wrapper {
+  position: absolute;
+  top: calc(48.4%);
+  left: calc(50% + 18pt);
+}
+
+.option-container {
+  color: var(--color-default);
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: "RDR Lino Regular";
+  background-image: url('assets/options.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left center;
+  font-size: 11pt;
+  line-height: 22pt;
+  vertical-align: middle;
+  margin: 2pt;
+  padding: 4pt 20pt 4pt 8pt;
+  transition: all 300ms ease-in-out;
+  transform-origin: left top;
+  scale: 1;
+  height: auto;
+  width: fit-content;
+  max-width: none;
+  white-space: nowrap;
+  top: 0;
+  filter: brightness(0.8) contrast(1.0);
+}
+
+.option-container:hover {
+  transform-origin: left top;
+  color: var(--color-hover);
+  margin-left: 4pt;
+  filter: brightness(1.1) contrast(1.1);
+  transform: scale(1.02);
+}
+
+.option-icon {
+  font-size: 12pt;
+  line-height: 22pt;
+  width: 14pt;
+  margin: 5pt 5pt 5pt 6pt;
+  color: var(--color-default);
+}
+
+.option-label {
+  font-weight: 500;
+  margin-left: 2pt;
+}

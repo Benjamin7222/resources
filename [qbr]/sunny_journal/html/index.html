@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Journal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="editor" class="overlay hidden">
+    <div class="editor-window">
+        <header class="editor-header">
+            <h1>Bureau de rédaction <small id="editor-paper"></small></h1>
+            <button id="editor-close" class="icon-btn" title="Fermer (Échap)">✕</button>
+        </header>
+
+        <div class="editor-body">
+            <aside class="editions">
+                <button id="new-edition" class="btn btn-primary btn-block">+ Nouvelle édition</button>
+                <ul id="edition-list"></ul>
+            </aside>
+
+            <main class="edition-panel">
+                <div id="empty-state" class="empty-state">
+                    <p>Choisis une édition à gauche ou crée-en une nouvelle.</p>
+                </div>
+
+                <form id="edition-form" class="hidden" autocomplete="off" onsubmit="return false">
+                    <div id="status-banner" class="banner hidden"></div>
+
+                    <div class="fields">
+                        <label class="field field-wide">
+                            <span>Titre du journal</span>
+                            <input id="f-title" type="text" maxlength="60" placeholder="La Gazette de Blackwater">
+                        </label>
+                        <label class="field field-small">
+                            <span>Édition n°</span>
+                            <input id="f-edition" type="number" min="1" max="99999" step="1">
+                        </label>
+                        <label class="field field-wide">
+                            <span>Rédigé par</span>
+                            <input id="f-author" type="text" maxlength="60">
+                        </label>
+                    </div>
+
+                    <div class="pages-head">
+                        <h2>Pages <small id="pages-count"></small></h2>
+                        <p class="hint">Colle le lien direct d'une image (JPG/PNG). L'ordre de la liste est l'ordre de lecture.</p>
+                    </div>
+                    <ol id="pages-list"></ol>
+                    <button id="add-page" type="button" class="btn">+ Ajouter une page</button>
+
+                    <footer class="actions">
+                        <button id="btn-save" type="button" class="btn btn-primary">Enregistrer le brouillon</button>
+                        <button id="btn-preview" type="button" class="btn">Aperçu</button>
+                        <button id="btn-publish" type="button" class="btn btn-accent">Publier l'édition</button>
+                        <button id="btn-delete" type="button" class="btn btn-danger">Supprimer le brouillon</button>
+                    </footer>
+
+                    <section id="print-box" class="print-box hidden">
+                        <h2>Impression</h2>
+                        <p class="hint">Tous les exemplaires d'une édition affichent le même contenu. <span id="printed-info"></span></p>
+                        <div class="print-row">
+                            <label>Journal
+                                <input id="f-paper" type="text" disabled>
+                            </label>
+                            <label>Exemplaires
+                                <input id="f-copies" type="number" min="1" value="10" step="1">
+                            </label>
+                            <button id="btn-print" type="button" class="btn btn-accent">Imprimer</button>
+                        </div>
+                    </section>
+                </form>
+            </main>
+        </div>
+    </div>
+</div>
+
+<div id="reader" class="overlay reader-overlay hidden">
+    <div id="r-book" class="book"></div>
+</div>
+
+<div id="confirm" class="overlay modal hidden">
+    <div class="modal-box">
+        <p id="confirm-text"></p>
+        <div class="modal-actions">
+            <button id="confirm-no" class="btn">Annuler</button>
+            <button id="confirm-yes" class="btn btn-accent">Confirmer</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

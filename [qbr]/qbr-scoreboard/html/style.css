@@ -1,0 +1,313 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DotGothic16&family=Ovo&family=Press+Start+2P&family=Source+Sans+Pro&family=VT323&display=swap");
+
+.container {
+	height: 50vh;
+	font-family: "Poppins", sans-serif;
+}
+
+.scoreboard-block {
+	display: none;
+	position: absolute;
+	height: 64.4vh;
+	width: 30.5vh;
+	right: 6vh;
+	top: 14vh;
+	box-shadow: 0px 0px 15px 4px rgba(2, 1, 0, 0);
+}
+
+.scoreboard-header {
+	position: relative;
+	width: 88.4%;
+	right: -4.25vh;
+	height: 3vh;
+	margin: 1px 1px 1px 1px;
+	top: 3vh;
+	box-shadow: 0px 0px 15px 4px rgb(0, 0, 0);
+	background: #1f1f1f;
+	border-bottom: 4px solid #b10101;
+}
+
+.scoreboard-header > p {
+	color: #2e2e2d;
+	padding: 1.8vh;
+	font-family: "Poppins", sans-serif;
+	font-size: 0.5vh;
+}
+
+.scoreboard-info {
+	position: relative;
+	height: 10vh;
+	width: 27vh;
+	top: 0;
+	margin: 0 auto;
+	transform: translateY(10%);
+	border-radius: 20px 20px 20px 20px;
+}
+
+.scoreboard-info-header {
+	position: relative;
+	height: 1.9vh;
+}
+
+.total-players {
+	font-family: "Poppins", sans-serif;
+	font-weight: bold;
+}
+
+#info-tab-label {
+	font-weight: bold;
+	font-size: 10;
+	position: absolute;
+	font-family: "Poppins", sans-serif;
+	left: 3.5vh;
+	top: -0.7vh;
+}
+
+#info-img {
+	position: absolute;
+	font-family: "Poppins", sans-serif;
+	font-size: 0.85rem;
+	font-weight: bold;
+	right: 0.5vh;
+	top: -0.5vh;
+}
+
+#info-img2 {
+	position: absolute;
+	font-family: "Poppins", sans-serif;
+	font-size: 0.85rem;
+	font-weight: bold;
+	right: 3.2vh;
+	top: 0.9vh;
+}
+
+#status-tab-label {
+	font-weight: bold;
+	font-size: 10;
+	position: absolute;
+	font-family: "Poppins", sans-serif;
+	left: -0.8vh;
+	top: -4.4vh;
+}
+
+.info-beam-title {
+	position: absolute;
+	font-family: "Poppins", sans-serif;
+	font-size: 0.85rem;
+	/* letter-spacing: 0.1vh; */
+	left: 3vh;
+	line-height: 3.2vh;
+}
+
+.info-beam-title1 {
+	position: absolute;
+	font-family: "Poppins", sans-serif;
+	font-size: 0.85rem;
+	font-weight: bolder;
+	/* letter-spacing: 0.1vh; */
+	left: 1vh;
+	line-height: 3.2vh;
+}
+
+.info-beam-title2 {
+	position: absolute;
+	color: white;
+	font-family: "PT Sans", sans-serif;
+	font-size: 0.85rem;
+	font-weight: bold;
+	/* letter-spacing: 0.1vh; */
+	left: 1.5vh;
+	line-height: 2.5vh;
+}
+
+.info-beam-status {
+	position: absolute;
+	font-family: "PT Sans", sans-serif;
+	font-weight: bold;
+	right: 3vh;
+	float: left;
+	text-align: left;
+	line-height: 3.2vh;
+}
+
+.info-beam-status2 {
+	position: absolute;
+	color: white;
+	font-family: "Poppins", sans-serif;
+	font-weight: bold;
+	right: 2vh;
+	float: left;
+	text-align: left;
+	line-height: 2.5vh;
+}
+
+.scoreboard-info-beam {
+	position: relative;
+	width: 100%;
+	right: -2.5vh;
+	height: 3vh;
+	margin: 2px 1px 1px 1px;
+}
+
+.scoreboard-info-beam-pl {
+	position: relative;
+	width: 100%;
+	right: -2.5vh;
+	height: 2.5vh;
+	margin: 2px 1px 1px 1px;
+}
+
+.context {
+	position: relative;
+	box-shadow: 0px 0px 3px rgba(37, 36, 36, 0.205);
+	border-top: solid 4px #464646;
+	width: 100%;
+	right: -2.5vh;
+	height: 3vh;
+	margin: 1px 1px 1px 1px;
+}
+
+/* 3 */
+
+#info-img3 {
+	position: absolute;
+	font-family: "Poppins", sans-serif;
+	font-size: 0.85rem;
+	font-weight: bold;
+	left: 8.6vh;
+	top: 0.9vh;
+}
+
+/* 3 */
+
+.scoreboard-info-beam1 {
+	position: relative;
+	box-shadow: 0px 0px 3px rgba(255, 255, 255, 0.205);
+	height: 3.75vh;
+	margin: 5px 1px 1px 1px;
+	width: 100%;
+	background-image: url("giphytes.gif");
+	background-size: contain;
+	background-size: 100% 100%;
+}
+
+.scoreboard-info-beam55 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(-11%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam2 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(-3%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam3 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(5%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam4 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(14%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam5 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(21%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam6 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(28%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam7 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(35%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam8 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(42%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam9 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(49%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam10 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(56%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam11 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(64%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam12 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(72%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam13 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(80%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.scoreboard-info-beam14 {
+	height: 4.2vh;
+	width: 100%;
+	transform: translateY(88%);
+	border-radius: 10px 10px 10px 10px;
+}
+
+.fa-exclamation-circle {
+	color: rgb(255, 0, 0);
+	line-height: 3.2vh;
+}
+
+.fa-circle {
+	color: rgb(0, 255, 115);
+}
+
+.fa-clock {
+	color: rgb(255, 190, 50);
+}
+
+.sb-logo {
+	width: 15vh;
+	right: 105vh;
+	left: 99vh;
+	width: 65%;
+	transform: translate(55px, 0);
+	margin: -0.6vh;
+}

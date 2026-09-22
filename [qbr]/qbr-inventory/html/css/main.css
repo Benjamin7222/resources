@@ -1,0 +1,928 @@
+/* ==========================================================================
+   QBR Inventory - thème western (cuir, laiton, parchemin)
+   Ne pas renommer les classes/ids : js/app.js s'appuie dessus.
+   ========================================================================== */
+
+@font-face {
+    font-family: "RDRLino";
+    src: url("../fonts/RDRLino-Regular.woff2") format("woff2"), url("../fonts/RDRLino-Regular.woff") format("woff");
+    font-display: swap;
+}
+@font-face {
+    font-family: "RDRCatalogue";
+    src: url("../fonts/RDRCatalogueBold-Bold.woff2") format("woff2"), url("../fonts/RDRCatalogueBold-Bold.woff") format("woff");
+    font-display: swap;
+}
+@font-face {
+    font-family: "HapnaSlab";
+    src: url("../fonts/HapnaSlabSerif-DemiBold.woff2") format("woff2"), url("../fonts/HapnaSlabSerif-DemiBold.woff") format("woff");
+    font-display: swap;
+}
+
+:root {
+    --text-color: #f0e2bd;
+    --background-color: #241610;
+    --font-size: 1.05vh;
+    --hover-color: rgba(201, 160, 79, 0.45);
+
+    --leather-dark: #1d120c;
+    --leather: #33221a;
+    --leather-light: #5a3d26;
+    --brass: #c9a04f;
+    --brass-light: #edd28a;
+    --brass-dark: #7a5a25;
+    --parchment: #ebdcb0;
+    --parchment-dark: #cdb47e;
+    --ink: #33200f;
+    --blood: #9c3325;
+    --moss: #7a9a3e;
+    --gold: #dcae45;
+
+    --ease-out: cubic-bezier(0.2, 0.75, 0.25, 1);
+    --font-title: "RDRLino", "Georgia", "Times New Roman", serif;
+    --font-body: "HapnaSlab", "Georgia", "Times New Roman", serif;
+    --font-num: "RDRCatalogue", "HapnaSlab", "Georgia", serif;
+}
+
+* {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: none !important;
+    font-family: var(--font-body);
+    color: var(--text-color);
+}
+
+#qbcore-inventory p,
+.weapon-attachments-container p,
+.itemboxes-container p,
+.requiredItem-container p,
+.z-hotbar-inventory p,
+.ply-hotbar-inventory p,
+.combine-option-container p {
+    margin: 0;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Barre de défilement discrète en laiton */
+::-webkit-scrollbar {
+    width: 0.5vh;
+}
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 1vh;
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--brass), var(--brass-dark));
+    border-radius: 1vh;
+}
+
+/* ---------- Conteneur + voile sépia -------------------------------------- */
+
+#qbcore-inventory {
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+#qbcore-inventory::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse at 50% 46%, rgba(40, 24, 10, 0.25) 0%, rgba(14, 8, 3, 0.78) 100%),
+        linear-gradient(rgba(30, 18, 6, 0.28), rgba(30, 18, 6, 0.28));
+}
+
+.inventory-money {
+    position: absolute;
+    top: 4vh;
+    right: 4vw;
+    z-index: 103;
+    min-width: 22vh;
+    max-width: 90vw;
+    padding: 1.2vh 1.6vh;
+    border: 0.15vh solid var(--brass-dark);
+    border-radius: 0.5vh;
+    background: linear-gradient(135deg, var(--leather), var(--leather-dark));
+    box-shadow: 0 0.4vh 1.4vh rgba(0, 0, 0, 0.45);
+    font-family: var(--font-body);
+    font-size: 1.65vh;
+    color: var(--parchment);
+    pointer-events: none;
+}
+
+.inventory-money-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 3vh;
+}
+
+.inventory-money-row + .inventory-money-row {
+    margin-top: 0.6vh;
+}
+
+.inventory-money-row strong {
+    font-family: var(--font-num);
+    font-size: 1.9vh;
+    font-weight: normal;
+    color: var(--brass-light);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.inv-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/* ---------- Plaques de titre (parchemin) -------------------------------- */
+
+.player-inv-info,
+.other-inv-info {
+    position: absolute;
+    top: 21%;
+    width: 28%;
+    height: 4.2vh;
+    box-sizing: border-box;
+    padding: 0 1.4vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-title);
+    font-size: 1.9vh;
+    letter-spacing: 0.08vh;
+    color: var(--ink);
+    text-shadow: 0 1px 0 rgba(255, 245, 215, 0.55);
+    background:
+        linear-gradient(180deg, rgba(255, 250, 230, 0.45), rgba(255, 250, 230, 0) 45%),
+        linear-gradient(180deg, var(--parchment), var(--parchment-dark));
+    border: 0.25vh solid var(--leather-light);
+    border-bottom: none;
+    border-radius: 0.6vh 0.6vh 0 0;
+    box-shadow: 0 -0.3vh 1vh rgba(0, 0, 0, 0.45), inset 0 0 1.4vh rgba(120, 80, 30, 0.35);
+    z-index: 101;
+}
+
+.player-inv-info {
+    left: 14.2%;
+    animation: panelInLeft 0.42s var(--ease-out) backwards;
+}
+.other-inv-info {
+    right: 14.2%;
+    animation: panelInRight 0.42s var(--ease-out) backwards;
+}
+
+#player-inv-weight-value,
+#other-inv-weight-value {
+    font-family: var(--font-num);
+    font-size: 1.9vh;
+    letter-spacing: 0.05vh;
+    color: var(--leather-light);
+}
+
+/* ---------- Barres de poids ---------------------------------------------- */
+
+#player-inv-progressbar,
+#other-inv-progressbar {
+    position: absolute;
+    top: 25.2%;
+    height: 0.8vh;
+    box-sizing: border-box;
+    width: 28%;
+    z-index: 102;
+    background: linear-gradient(180deg, #120a05, #2a1a0e);
+    border-top: 0.2vh solid var(--leather-light);
+    border-bottom: 0.2vh solid var(--leather-light);
+    border-left: 0.25vh solid var(--leather-light);
+    border-right: 0.25vh solid var(--leather-light);
+    overflow: hidden;
+}
+#player-inv-progressbar {
+    left: 14.2%;
+    animation: panelInLeft 0.42s var(--ease-out) backwards;
+}
+#other-inv-progressbar {
+    right: 14.2%;
+    animation: panelInRight 0.42s var(--ease-out) backwards;
+}
+
+.ui-progressbar.ui-widget.ui-widget-content,
+.ui-progressbar.ui-widget-content {
+    border: none;
+}
+.ui-progressbar .ui-widget-header {
+    border: none;
+}
+.ui-progressbar-value {
+    transition: width 0.45s var(--ease-out);
+    -webkit-transition: width 0.45s var(--ease-out);
+}
+.ui-progressbar .ui-progressbar-value {
+    height: 100%;
+    background: linear-gradient(180deg, #a5c25a, #6b8a34);
+    box-shadow: 0 0 0.8vh rgba(140, 180, 70, 0.55);
+}
+.ui-progressbar-medium .ui-progressbar-value {
+    background: linear-gradient(180deg, #f0cc63, #c8921f);
+    box-shadow: 0 0 0.8vh rgba(230, 180, 60, 0.55);
+}
+.ui-progressbar-high .ui-progressbar-value {
+    background: linear-gradient(180deg, #d9614f, #8d2618);
+    box-shadow: 0 0 0.8vh rgba(200, 70, 50, 0.6);
+}
+
+/* ---------- Panneaux d'inventaire (cuir clouté) ------------------------- */
+
+.player-inventory,
+.other-inventory {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    position: absolute;
+    top: 26%;
+    width: 28%;
+    height: 47.16%;
+    box-sizing: border-box;
+    padding: 1vh 0.9vh 1vh 1vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    z-index: 100;
+    border: 0.3vh solid var(--leather-light);
+    border-top: none;
+    border-radius: 0 0 0.8vh 0.8vh;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(201, 160, 79, 0.08), transparent 60%),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.018) 0 0.2vh, transparent 0.2vh 0.4vh),
+        repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.05) 0 0.2vh, transparent 0.2vh 0.4vh),
+        linear-gradient(180deg, #3a271a, #241610);
+    box-shadow:
+        0 2.4vh 4vh rgba(0, 0, 0, 0.7),
+        inset 0 0 5vh rgba(0, 0, 0, 0.6),
+        inset 0 0 0 0.15vh rgba(201, 160, 79, 0.35);
+}
+
+.player-inventory {
+    left: 14.2%;
+    animation: panelInLeft 0.42s var(--ease-out) backwards;
+}
+.other-inventory {
+    right: 14.2%;
+    animation: panelInRight 0.42s var(--ease-out) backwards;
+}
+
+/* ---------- Emplacements ------------------------------------------------- */
+
+.item-slot {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: calc(20% - 0.6vh);
+    height: 10vh;
+    margin: 0.3vh;
+    overflow: hidden;
+    border-radius: 0.5vh;
+    border: 0.15vh solid rgba(201, 160, 79, 0.28);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-image:
+        radial-gradient(circle at 50% 38%, rgba(255, 226, 160, 0.09), transparent 62%),
+        linear-gradient(160deg, rgba(92, 62, 38, 0.55), rgba(27, 17, 10, 0.75));
+    box-shadow: inset 0 0 0 0.1vh rgba(0, 0, 0, 0.55), inset 0 0.1vh 0 rgba(255, 235, 190, 0.07), 0 0.2vh 0.5vh rgba(0, 0, 0, 0.35);
+    /* Pas d'animation d'apparition ici : le jeu reconstruit toutes les cases à chaque mise à jour
+       (utiliser, donner...), elle se rejouerait en permanence et ferait clignoter la grille. */
+    transition: transform 0.16s var(--ease-out), border-color 0.16s, box-shadow 0.16s, background-color 0.16s;
+}
+
+/* Emplacement qui contient un objet */
+.item-slot.item-drag {
+    cursor: grab;
+    border-color: rgba(201, 160, 79, 0.55);
+    background-image:
+        radial-gradient(circle at 50% 38%, rgba(255, 226, 160, 0.16), transparent 64%),
+        linear-gradient(160deg, rgba(110, 76, 46, 0.7), rgba(38, 24, 14, 0.85));
+}
+.item-slot.item-nodrag {
+    cursor: default;
+}
+
+.item-slot:hover {
+    z-index: 5;
+    transform: translateY(-0.3vh);
+    border-color: var(--gold);
+    box-shadow:
+        0 0.9vh 1.6vh rgba(0, 0, 0, 0.55),
+        0 0 1.2vh rgba(220, 174, 69, 0.35),
+        inset 0 0 1.6vh rgba(220, 174, 69, 0.14);
+}
+
+/* Cible de dépôt pendant un glisser-déposer */
+.item-slot.item-slot-hoverClass {
+    transform: scale(1.04);
+    border-color: var(--brass-light);
+    background-color: rgba(220, 174, 69, 0.22);
+    box-shadow: 0 0 1.8vh rgba(237, 210, 138, 0.6), inset 0 0 2vh rgba(237, 210, 138, 0.28);
+}
+
+/* Copie de l'objet que l'on tient à la souris */
+.ui-draggable-dragging {
+    z-index: 9999 !important;
+    cursor: grabbing !important;
+    transition: none !important;
+    animation: none !important;
+    transform: scale(1.08) rotate(-2.5deg) !important;
+    opacity: 0.96;
+    border-color: var(--brass-light) !important;
+    box-shadow: 0 2.4vh 3.4vh rgba(0, 0, 0, 0.7), 0 0 2.2vh rgba(237, 210, 138, 0.55) !important;
+}
+
+.item-slot-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0 0 2.6vh;
+}
+
+.item-slot-img img {
+    width: 52%;
+    height: auto;
+    max-height: 72%;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 0.3vh 0.4vh rgba(0, 0, 0, 0.75));
+    transition: transform 0.18s var(--ease-out);
+}
+.item-slot:hover .item-slot-img img {
+    transform: scale(1.1);
+}
+
+/* Touche rapide (1-6) : plaque en laiton */
+.item-slot-key {
+    position: absolute;
+    top: 0.5vh;
+    left: 0.5vh;
+    width: 2.2vh;
+    height: 2.2vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    font-family: var(--font-num);
+    font-size: 1.3vh;
+    font-weight: bolder;
+    color: var(--ink);
+    border-radius: 0.4vh;
+    border: 0.12vh solid var(--brass-dark);
+    background: linear-gradient(180deg, var(--brass-light), var(--brass));
+    box-shadow: inset 0 0.1vh 0 rgba(255, 255, 255, 0.55), 0 0.2vh 0.4vh rgba(0, 0, 0, 0.55);
+}
+.item-slot-key p {
+    margin: 0;
+}
+
+/* Quantité (poids) */
+.item-slot-amount {
+    position: absolute;
+    top: 0.4vh;
+    right: 0.5vh;
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: none;
+    font-family: var(--font-num);
+    font-size: 1.15vh;
+    color: var(--parchment);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95), 0 0 0.6vh rgba(0, 0, 0, 0.9);
+}
+.item-slot-amount p {
+    margin: 0;
+    letter-spacing: 0.03vh;
+}
+
+/* Nom de l'objet : bandeau de cuir */
+.item-slot-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3.2vh;
+    box-sizing: border-box;
+    padding: 0 0.4vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(0deg, rgba(14, 8, 4, 0.94), rgba(14, 8, 4, 0.6));
+    border-top: 0.1vh solid rgba(201, 160, 79, 0.28);
+}
+/* Les noms longs passent sur 2 lignes au lieu d'être coupés */
+.item-slot-label p {
+    margin: 0;
+    max-width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-align: center;
+    line-height: 1.18;
+    font-family: var(--font-body);
+    font-size: 0.98vh;
+    text-transform: uppercase;
+    letter-spacing: 0.04vh;
+    color: var(--text-color);
+    font-weight: normal;
+}
+
+/* Emplacements vides des inventaires : pas de bandeau de nom */
+.player-inventory .item-slot:not(.item-drag) .item-slot-label,
+.other-inventory .item-slot:not(.item-drag) .item-slot-label {
+    visibility: hidden;
+}
+
+/* Durabilité des armes */
+.item-slot-quality {
+    position: absolute;
+    bottom: 3.2vh;
+    left: 0;
+    width: 100%;
+    height: 0.6vh;
+    background: rgba(0, 0, 0, 0.55);
+}
+.item-slot-quality-bar {
+    height: 100%;
+    font-size: 0;
+    transition: width 0.4s var(--ease-out), background-color 0.3s;
+}
+.item-slot-quality-bar p {
+    display: none;
+}
+
+/* ---------- Colonne centrale : boutons ---------------------------------- */
+
+.inv-options {
+    position: absolute;
+    width: 10%;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: optionsIn 0.45s 0.1s var(--ease-out) backwards;
+}
+
+.inv-options-list {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.inv-option-item {
+    width: 100%;
+    margin: 0.9vh 0;
+    height: 4.4vh;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    font-family: var(--font-title);
+    font-size: 1.7vh;
+    letter-spacing: 0.15vh;
+    color: var(--parchment);
+    border-radius: 0.6vh;
+    border: 0.2vh solid var(--brass-dark);
+    background:
+        linear-gradient(180deg, rgba(255, 235, 190, 0.1), rgba(255, 235, 190, 0) 50%),
+        linear-gradient(180deg, var(--leather-light), var(--leather));
+    box-shadow: 0 0.4vh 0.9vh rgba(0, 0, 0, 0.55), inset 0 0 0 0.1vh rgba(0, 0, 0, 0.4);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+    transition: transform 0.12s var(--ease-out), background 0.16s, border-color 0.16s, color 0.16s, box-shadow 0.16s;
+}
+.inv-option-item:hover {
+    color: var(--ink);
+    border-color: var(--brass-light);
+    text-shadow: 0 1px 0 rgba(255, 245, 215, 0.5);
+    background: linear-gradient(180deg, var(--brass-light), var(--brass));
+    box-shadow: 0 0.6vh 1.3vh rgba(0, 0, 0, 0.55), 0 0 1.2vh rgba(220, 174, 69, 0.4);
+    transform: translateY(-0.2vh);
+}
+.inv-option-item:active {
+    transform: translateY(0.15vh) scale(0.98);
+    box-shadow: 0 0.1vh 0.3vh rgba(0, 0, 0, 0.6), inset 0 0.3vh 0.8vh rgba(0, 0, 0, 0.35);
+}
+.inv-option-item.button-hover {
+    color: var(--ink);
+    border-color: var(--brass-light);
+    background: linear-gradient(180deg, var(--brass-light), var(--brass));
+    box-shadow: 0 0 1.6vh rgba(237, 210, 138, 0.65);
+    transform: scale(1.05);
+}
+
+/* Le champ quantité est un .inv-option-item : on le transforme en étiquette */
+#item-amount {
+    cursor: text;
+    text-align: center;
+    color: var(--ink);
+    font-family: var(--font-num);
+    font-size: 1.8vh;
+    letter-spacing: 0.1vh;
+    text-shadow: none;
+    background: linear-gradient(180deg, var(--parchment), var(--parchment-dark));
+    border-color: var(--leather-light);
+    box-shadow: inset 0 0.3vh 0.8vh rgba(80, 50, 20, 0.35), 0 0.3vh 0.7vh rgba(0, 0, 0, 0.5);
+    outline: none;
+}
+#item-amount:hover {
+    color: var(--ink);
+    transform: none;
+    background: linear-gradient(180deg, var(--parchment), var(--parchment-dark));
+    border-color: var(--brass);
+}
+#item-amount:focus {
+    border-color: var(--gold);
+    box-shadow: inset 0 0.3vh 0.8vh rgba(80, 50, 20, 0.35), 0 0 1.2vh rgba(220, 174, 69, 0.55);
+}
+#item-amount::placeholder {
+    color: rgba(51, 32, 15, 0.55);
+    font-family: var(--font-title);
+    letter-spacing: 0.15vh;
+    text-transform: uppercase;
+}
+
+#item-use p,
+#item-give p,
+#inv-close p,
+#weapon-attachments p {
+    margin: 0;
+}
+
+/* ---------- Infobulle d'objet (parchemin) -------------------------------- */
+
+.ply-iteminfo-container {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    width: 17vw;
+    min-height: 9vh;
+    transform: translate(-50%, -50%);
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    color: var(--ink);
+    border-radius: 0.6vh;
+    border: 0.25vh solid var(--leather-light);
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(255, 250, 230, 0.55), transparent 70%),
+        repeating-linear-gradient(0deg, rgba(120, 80, 30, 0.035) 0 0.2vh, transparent 0.2vh 0.5vh),
+        linear-gradient(180deg, var(--parchment), var(--parchment-dark));
+    box-shadow: 0 1.6vh 3vh rgba(0, 0, 0, 0.65), inset 0 0 2.4vh rgba(120, 80, 30, 0.4), inset 0 0 0 0.15vh rgba(255, 245, 215, 0.6);
+    z-index: 120;
+}
+
+.iteminfo-content {
+    width: 100%;
+    padding: 1.4vh 1.4vh 1.5vh;
+    box-sizing: border-box;
+}
+
+.item-info-title {
+    font-family: var(--font-title);
+    font-size: 1.9vh;
+    letter-spacing: 0.1vh;
+    color: #2a170a;
+    text-shadow: 0 1px 0 rgba(255, 245, 215, 0.6);
+}
+.item-info-title p {
+    margin: 0;
+}
+
+/* Filet orné sous le titre */
+.item-info-line {
+    position: relative;
+    height: 0.15vh;
+    margin: 0.9vh 12% 1vh;
+    background: linear-gradient(90deg, transparent, var(--brass-dark), transparent);
+}
+.item-info-line::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0.8vh;
+    height: 0.8vh;
+    background: var(--brass-dark);
+    border: 0.15vh solid var(--parchment);
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.item-info-description {
+    font-family: var(--font-body);
+    font-size: 1.3vh;
+    line-height: 1.5;
+    color: #46301a;
+}
+.item-info-description p {
+    margin: 0 0 0.35vh;
+}
+.item-info-description strong {
+    color: #2a170a;
+    font-family: var(--font-title);
+    font-weight: normal;
+    letter-spacing: 0.05vh;
+}
+
+/* ---------- Écran des accessoires d'armes -------------------------------- */
+
+.weapon-attachments-container {
+    width: 100%;
+    height: 100%;
+    display: none;
+    font-family: var(--font-body);
+    color: var(--text-color);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+.weapon-attachments-container::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 50%, rgba(40, 24, 10, 0.55), rgba(10, 5, 2, 0.88) 100%);
+}
+
+.weapon-attachments-container-title {
+    position: fixed;
+    top: 27%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-title);
+    font-size: 3.6vh;
+    letter-spacing: 0.15vh;
+    color: var(--brass-light);
+}
+
+.weapon-attachments-container-description {
+    position: fixed;
+    top: 33%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.8vh;
+    font-style: italic;
+    color: var(--parchment);
+}
+
+.weapon-attachments-container-details {
+    position: fixed;
+    top: 66%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 1.6vh;
+    line-height: 1.6;
+    color: var(--parchment);
+}
+
+.weapon-attachments-container-detail-durability {
+    height: 1.2vh;
+    width: 18vh;
+    margin: 0.6vh auto 0;
+    background: rgba(0, 0, 0, 0.55);
+    border: 0.15vh solid var(--leather-light);
+    border-radius: 0.6vh;
+    overflow: hidden;
+}
+
+.weapon-attachments-container-detail-durability-total {
+    height: 100%;
+    width: 50%;
+    background: linear-gradient(180deg, #a5c25a, #6b8a34);
+    transition: width 0.4s var(--ease-out);
+}
+
+.weapon-attachments-container-image {
+    position: fixed;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 38vw;
+    filter: drop-shadow(0 1.2vh 1.6vh rgba(0, 0, 0, 0.8));
+}
+
+.weapon-attachments-title {
+    position: fixed;
+    top: 84%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-title);
+    font-size: 1.9vh;
+    letter-spacing: 0.1vh;
+    color: var(--brass-light);
+}
+
+.weapon-attachments {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    width: 30vw;
+    transform: translateX(-50%);
+    padding-bottom: 3vh;
+}
+.weapon-attachments .item-slot {
+    animation: none;
+}
+
+.weapon-attachments-remove {
+    position: fixed;
+    top: 79%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    border-radius: 0.6vh;
+    border: 0.2vh solid var(--brass-dark);
+    background: linear-gradient(180deg, var(--leather-light), var(--leather));
+    box-shadow: 0 0.4vh 0.9vh rgba(0, 0, 0, 0.55);
+    transition: background 0.16s, transform 0.12s, border-color 0.16s;
+}
+.weapon-attachments-remove > i {
+    color: var(--parchment);
+    font-size: 2vh;
+    padding: 1.1vh 1.6vh;
+}
+.weapon-attachments-remove:hover,
+.weapon-attachments-remove.weapon-attachments-remove-hover {
+    border-color: var(--brass-light);
+    background: linear-gradient(180deg, #b4453a, var(--blood));
+    transform: translate(-50%, -50%) scale(1.08);
+}
+
+.weapon-attachments-back {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 14vh;
+    height: 5vh;
+    margin: 5vh;
+    cursor: pointer;
+    text-align: center;
+    line-height: 5vh;
+    font-family: var(--font-title);
+    font-size: 1.7vh;
+    letter-spacing: 0.15vh;
+    color: var(--parchment);
+    border-radius: 0.6vh;
+    border: 0.2vh solid var(--brass-dark);
+    background: linear-gradient(180deg, var(--leather-light), var(--leather));
+    box-shadow: 0 0.4vh 0.9vh rgba(0, 0, 0, 0.55);
+    transition: background 0.16s, transform 0.12s, color 0.16s, border-color 0.16s;
+}
+.weapon-attachments-back:hover {
+    color: var(--ink);
+    text-shadow: none;
+    border-color: var(--brass-light);
+    background: linear-gradient(180deg, var(--brass-light), var(--brass));
+    transform: translateY(-0.2vh);
+}
+
+.weapon-dragging-class {
+    opacity: 0.55;
+}
+
+/* ---------- Combiner / échanger ------------------------------------------ */
+
+.combine-option-container {
+    display: none;
+    position: absolute;
+    width: 10%;
+    top: 62%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
+    z-index: 130;
+}
+
+.CombineItem p,
+.SwitchItem p {
+    margin: 0;
+}
+
+.combine-option-text {
+    margin-bottom: 1vh;
+    text-align: center;
+    font-size: 1.4vh;
+    color: var(--parchment);
+}
+
+/* ---------- Notifications d'objets / requis / barre rapide ---------------- */
+
+.itemboxes-container,
+.requiredItem-container,
+.z-hotbar-inventory {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    width: 34vw;
+    transform: translateX(-50%);
+    padding-bottom: 3vh;
+    pointer-events: none;
+}
+
+.itemboxes-container .item-slot,
+.requiredItem-container .item-slot,
+.z-hotbar-inventory .item-slot {
+    animation: boxIn 0.4s var(--ease-out) backwards;
+    box-shadow: 0 1.2vh 2vh rgba(0, 0, 0, 0.6), inset 0 0 0 0.1vh rgba(0, 0, 0, 0.55);
+    border-color: rgba(201, 160, 79, 0.6);
+}
+.itemboxes-container .item-slot:hover,
+.requiredItem-container .item-slot:hover,
+.z-hotbar-inventory .item-slot:hover {
+    transform: none;
+}
+
+.itemboxes-container .item-slot-amount p,
+.requiredItem-container .item-slot-amount p {
+    padding: 0.2vh 0.7vh;
+    border-radius: 0.4vh;
+    background: linear-gradient(180deg, var(--brass-light), var(--brass));
+    color: var(--ink);
+    text-shadow: none;
+    font-family: var(--font-title);
+    letter-spacing: 0.08vh;
+}
+
+/* ---------- Animations ---------------------------------------------------- */
+
+@keyframes panelInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-4vw);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+@keyframes panelInRight {
+    from {
+        opacity: 0;
+        transform: translateX(4vw);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+@keyframes optionsIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -42%) scale(0.94);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+@keyframes boxIn {
+    from {
+        opacity: 0;
+        transform: translateY(2.4vh) scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01s !important;
+        transition-duration: 0.01s !important;
+    }
+}

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Sunny-affiches</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="board" class="board hidden">
+    <header class="board-head">
+        <div class="board-title">
+            <h1>Panneau d'affichage</h1>
+            <span id="b-city" class="badge"></span>
+        </div>
+        <div class="head-right">
+            <span id="b-me" class="me hidden"></span>
+            <button id="btn-close" class="btn btn-close" title="Échap">Fermer</button>
+        </div>
+    </header>
+
+    <nav id="countries" class="countries" aria-label="Pays"></nav>
+
+    <div class="board-body">
+        <aside class="side">
+            <div class="side-title">Catégories</div>
+            <nav id="cats" class="cats" aria-label="Catégories"></nav>
+        </aside>
+
+        <section class="content">
+            <div class="content-head">
+                <div class="content-title">
+                    <h2><span id="c-label"></span><span id="c-count" class="count-line"></span></h2>
+                    <p id="c-desc" class="hint"></p>
+                </div>
+                <div class="content-tools">
+                    <button id="btn-claim" class="btn hidden">Récupérer mes exemplaires invendus</button>
+                    <button id="btn-collect" class="btn btn-gold hidden">Récupérer l'argent du journal</button>
+                    <span id="readonly" class="readonly hidden">Lecture seule</span>
+                    <input id="search" type="text" placeholder="Rechercher…" maxlength="60">
+                    <button id="btn-new" class="btn btn-accent hidden">+ Nouvelle affiche</button>
+                </div>
+            </div>
+            <main id="posters" class="posters"></main>
+            <div id="empty" class="empty hidden"></div>
+        </section>
+    </div>
+</div>
+
+<div id="detail" class="overlay modal hidden">
+    <article class="detail-box">
+        <button id="detail-close" class="btn detail-x" title="Échap">Fermer</button>
+        <div id="detail-img" class="detail-img"></div>
+        <div class="detail-info">
+            <span id="detail-cat" class="cat-tag"></span>
+            <h2 id="detail-title"></h2>
+            <dl id="detail-meta" class="meta"></dl>
+            <section id="detail-journal" class="journal-box hidden">
+                <h3>Journal en vente</h3>
+                <dl id="detail-jmeta" class="meta jmeta"></dl>
+                <button id="detail-buy" class="btn btn-accent btn-block">Acheter le journal</button>
+                <div id="detail-stock" class="stock-row hidden">
+                    <label for="stock-amount">Exemplaires <small id="stock-hint"></small></label>
+                    <div class="stock-controls">
+                        <input id="stock-amount" type="number" min="1" step="1" value="1">
+                        <button id="stock-add" class="btn btn-small" title="Retire les exemplaires de ton inventaire pour les mettre en vente">Mettre en vente</button>
+                        <button id="stock-take" class="btn btn-small" title="Remet des exemplaires invendus dans ton inventaire">Reprendre</button>
+                    </div>
+                </div>
+            </section>
+            <div class="detail-actions">
+                <button id="detail-pin" class="btn hidden">Épingler</button>
+                <button id="detail-edit" class="btn hidden">Modifier</button>
+                <button id="detail-delete" class="btn btn-danger hidden">Supprimer</button>
+            </div>
+            <div id="detail-nav" class="detail-nav hidden">
+                <button id="detail-prev" class="btn btn-small">Précédente</button>
+                <span id="detail-pos"></span>
+                <button id="detail-next" class="btn btn-small">Suivante</button>
+            </div>
+        </div>
+    </article>
+</div>
+
+<div id="form-modal" class="overlay modal hidden">
+    <form id="form" class="modal-box modal-wide" autocomplete="off" onsubmit="return false">
+        <h2 id="form-heading">Nouvelle affiche</h2>
+
+        <label class="field">
+            <span>Catégorie</span>
+            <select id="f-category"></select>
+        </label>
+
+        <div id="f-journal" class="journal-form hidden">
+            <label class="field">
+                <span>Journal lié <small>(la première page devient l'affiche)</small></span>
+                <select id="f-edition"></select>
+            </label>
+            <p id="f-journal-note" class="hint"></p>
+            <div id="f-price-row" class="row hidden">
+                <label class="field">
+                    <span>Prix de vente <small>($)</small></span>
+                    <input id="f-price" type="number" min="0" step="0.05">
+                </label>
+                <label id="f-stock-field" class="field">
+                    <span>Exemplaires en vente <small id="f-stock-hint"></small></span>
+                    <input id="f-stock" type="number" min="0" step="1">
+                </label>
+            </div>
+        </div>
+
+        <label class="field">
+            <span>Titre <small id="f-count"></small></span>
+            <input id="f-title" type="text" maxlength="60" placeholder="Titre de l'affiche">
+        </label>
+
+        <label class="field">
+            <span>Image / visuel <small>(lien direct, facultatif)</small></span>
+            <input id="f-url" type="text" maxlength="500" placeholder="https://…">
+        </label>
+        <div id="f-preview" class="preview"><span>Aperçu</span></div>
+
+        <label class="field">
+            <span>Durée d'affichage <small id="f-days-hint"></small></span>
+            <select id="f-days"></select>
+        </label>
+
+        <label id="f-anon-field" class="check hidden">
+            <input id="f-anon" type="checkbox">
+            <span>Publier anonymement <small>(ton nom n'apparaîtra pas sur l'affiche)</small></span>
+        </label>
+
+        <p id="f-error" class="form-error hidden"></p>
+        <div class="modal-actions">
+            <button id="f-cancel" type="button" class="btn">Annuler</button>
+            <button id="f-submit" type="submit" class="btn btn-accent">Publier</button>
+        </div>
+    </form>
+</div>
+
+<div id="zoom" class="overlay zoom hidden">
+    <p class="zoom-help">Molette : zoom · Glisser : déplacer · Double-clic : agrandir · Échap : fermer</p>
+    <img id="zoom-img" alt="" draggable="false">
+    <div class="zoom-bar">
+        <button id="zoom-out" class="btn btn-small">Zoom -</button>
+        <span id="zoom-level">100 %</span>
+        <button id="zoom-in" class="btn btn-small">Zoom +</button>
+        <button id="zoom-fit" class="btn btn-small">Ajuster</button>
+        <button id="zoom-close" class="btn btn-small">Fermer</button>
+    </div>
+</div>
+
+<div id="confirm" class="overlay modal hidden">
+    <div class="modal-box">
+        <p id="confirm-text"></p>
+        <div class="modal-actions">
+            <button id="confirm-no" class="btn">Annuler</button>
+            <button id="confirm-yes" class="btn btn-accent">Confirmer</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
