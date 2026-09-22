@@ -61,20 +61,6 @@ CreateThread(function()
             `xp` int unsigned NOT NULL DEFAULT 0,
             PRIMARY KEY (`citizenid`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4]])
-        MySQL.query.await([[CREATE TABLE IF NOT EXISTS `rodeo_rides` (
-            `id` int unsigned NOT NULL AUTO_INCREMENT,
-            `citizenid` varchar(50) NOT NULL,
-            `duration_ms` int unsigned NOT NULL,
-            `combos` int unsigned NOT NULL DEFAULT 0,
-            `xp` int unsigned NOT NULL DEFAULT 0,
-            `reason` varchar(16) NOT NULL DEFAULT 'fall',
-            `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (`id`),
-            KEY `created` (`created_at`),
-            KEY `citizen` (`citizenid`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4]])
-        MySQL.query.await('DELETE FROM `rodeo_rides` WHERE `created_at` < (NOW() - INTERVAL ? DAY)',
-            { math.max(8, math.floor(tonumber(Config.KeepRideDays) or 60)) })
     end)
     if ok then
         databaseReady = true
@@ -170,16 +156,6 @@ end)
 
 local REASONS = { fall = true, quit = true, max = true, dead = true, error = true }
 
-local function SendWebhook(title, description)
-    local url = Config.Webhook
-    if type(url) ~= 'string' or url == '' then return end
-    PerformHttpRequest(url, function() end, 'POST', json.encode({
-        username = Config.WebhookName,
-        allowed_mentions = { parse = {} },
-        embeds = { { title = title, description = description, color = 0xA3321F } },
-    }), { ['Content-Type'] = 'application/json' })
-end
-
 RegisterCallback('sunny_rodeo:server:Finish', function(src, data)
     data = type(data) == 'table' and data or {}
     local session = Sessions[src]
@@ -223,16 +199,11 @@ RegisterCallback('sunny_rodeo:server:Finish', function(src, data)
                 best_combo = GREATEST(best_combo, VALUES(best_combo)),
                 rides = rides + 1, total_ms = total_ms + VALUES(total_ms), xp = xp + VALUES(xp)]],
             { cid, session.name, ms, combos, ms, xp })
-        MySQL.insert.await('INSERT INTO rodeo_rides (citizenid, duration_ms, combos, xp, reason) VALUES (?, ?, ?, ?, ?)',
-            { cid, ms, combos, xp, reason })
 
         rank = tonumber(MySQL.scalar.await('SELECT COUNT(*) + 1 FROM rodeo_players WHERE best_combo > ?', { bestScore })) or 1
 
-        if record and rank == 1 then
-            if Config.AnnounceRecord then
-                Notify(-1, ('Nouveau record du rodéo : %s a enchaîné %d épreuves en %d secondes !'):format(session.name, combos, Config.Ride.MaxSeconds), true)
-            end
-            SendWebhook('[RODEO] Nouveau record', ('%s a enchaîné %d épreuves (manche de %d secondes).'):format(session.name, combos, Config.Ride.MaxSeconds))
+        if record and rank == 1 and Config.AnnounceRecord then
+            Notify(-1, ('Nouveau record du rodéo : %s a enchaîné %d épreuves en %d secondes !'):format(session.name, combos, Config.Ride.MaxSeconds), true)
         end
     end
 
@@ -246,28 +217,18 @@ RegisterCallback('sunny_rodeo:server:Finish', function(src, data)
 end)
 
 local SORTS = {
-    time  = { col = 'best_ms',    week = 'MAX(r.duration_ms)' },
-    combo = { col = 'best_combo', week = 'MAX(r.combos)' },
-    level = { col = 'xp',         week = 'SUM(r.xp)' },
+    time  = { col = 'best_ms' },
+    combo = { col = 'best_combo' },
+    level = { col = 'xp' },
 }
 
 RegisterCallback('sunny_rodeo:server:Board', function(src, data)
     data = type(data) == 'table' and data or {}
     local sort = SORTS[data.sort] and data.sort or 'combo'
-    local week = data.period == 'week'
     local spec = SORTS[sort]
 
-    local rows
-    if week then
-        rows = MySQL.query.await(([[SELECT p.citizenid, p.name, p.xp, %s AS value
-            FROM rodeo_rides r JOIN rodeo_players p ON p.citizenid = r.citizenid
-            WHERE r.created_at >= (NOW() - INTERVAL 7 DAY)
-            GROUP BY p.citizenid, p.name, p.xp HAVING value > 0
-            ORDER BY value DESC, p.xp DESC LIMIT 500]]):format(spec.week))
-    else
-        rows = MySQL.query.await(([[SELECT citizenid, name, xp, %s AS value FROM rodeo_players
-            WHERE %s > 0 ORDER BY value DESC, xp DESC LIMIT 500]]):format(spec.col, spec.col))
-    end
+    local rows = MySQL.query.await(([[SELECT citizenid, name, xp, %s AS value FROM rodeo_players
+        WHERE %s > 0 ORDER BY value DESC, xp DESC LIMIT 500]]):format(spec.col, spec.col))
 
     local Player = QBCore:GetPlayer(src)
     local cid = Player and Player.PlayerData.citizenid
@@ -293,7 +254,7 @@ RegisterCallback('sunny_rodeo:server:Board', function(src, data)
     end
 
     return {
-        ok = true, sort = sort, period = week and 'week' or 'all', rows = top, me = me, profile = profile,
+        ok = true, sort = sort, rows = top, me = me, profile = profile,
         arena = Config.Arena.name, price = Config.Price, size = Config.TopSize,
     }
 end)
@@ -304,7 +265,6 @@ RegisterCommand('rodeoreset', function(src, args)
         if src ~= 0 then Notify(src, 'Cette commande efface TOUT le classement du rodéo. Tape /rodeoreset oui pour confirmer.', false) end
         return
     end
-    MySQL.query.await('TRUNCATE TABLE `rodeo_rides`')
     MySQL.query.await('TRUNCATE TABLE `rodeo_players`')
     Cooldowns = {}
     if src ~= 0 then Notify(src, 'Classement du rodéo remis à zéro.', true) end

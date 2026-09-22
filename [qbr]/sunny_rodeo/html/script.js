@@ -5,12 +5,11 @@ const $ = (id) => document.getElementById(id);
 
 const KEYS = {
     ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
-    z: 'up', w: 'up', s: 'down', q: 'left', a: 'left', d: 'right',   // ZQSD (AZERTY) et WASD
 };
 const ARROW_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 21 14h-6v7H9v-7H3z"/></svg>';
 
 let mode = null;                       // 'board' | 'ride' | 'result' | null
-let boardQuery = { sort: 'combo', period: 'all' };
+let boardQuery = { sort: 'combo' };
 let ch = null;                         // séquence en cours { id, seq, idx }
 let feedbackTimer = null;
 let hitTimer = null;
@@ -170,12 +169,11 @@ const VALUE_HEAD = { time: 'Temps', combo: 'Épreuves', level: 'XP' };
 
 // CLASSEMENT --------------------------------------------------------------------
 function renderBoard(res) {
-    boardQuery = { sort: res.sort, period: res.period };
+    boardQuery = { sort: res.sort };
     $('arena').textContent = res.arena || '';
-    $('valueHead').textContent = (VALUE_HEAD[res.sort] || 'Score') + (res.period === 'week' ? ' (7 j)' : '');
+    $('valueHead').textContent = VALUE_HEAD[res.sort] || 'Score';
 
     document.querySelectorAll('#sortTabs button').forEach((b) => b.classList.toggle('on', b.dataset.sort === res.sort));
-    document.querySelectorAll('#periodTabs button').forEach((b) => b.classList.toggle('on', b.dataset.period === res.period));
 
     const list = $('rows');
     list.textContent = '';
@@ -231,7 +229,6 @@ function loadBoard(patch) {
 }
 
 document.querySelectorAll('#sortTabs button').forEach((b) => b.addEventListener('click', () => loadBoard({ sort: b.dataset.sort })));
-document.querySelectorAll('#periodTabs button').forEach((b) => b.addEventListener('click', () => loadBoard({ period: b.dataset.period })));
 $('closeBoard').addEventListener('click', () => post('close'));
 
 // TOUR ----------------------------------------------------------------------------------
@@ -488,7 +485,7 @@ document.addEventListener('keydown', (e) => {
             post('quit');
             return;
         }
-        const dir = KEYS[e.key] || KEYS[String(e.key).toLowerCase()];
+        const dir = KEYS[e.key];
         if (!dir) return;
         e.preventDefault();
         if (!e.repeat) onArrow(dir);
