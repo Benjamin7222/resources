@@ -648,6 +648,7 @@ end
 
 local BUNDLE = 'newspaper_bundle'
 
+-- Ne recense que les exemplaires seuls : les lots (BUNDLE) ne comptent pas pour la mise en vente.
 local function InventorySlots(Player, journalId)
     local found = {}
     for key, item in pairs(Player.PlayerData.items or {}) do
@@ -657,20 +658,12 @@ local function InventorySlots(Player, journalId)
                 if item.name == paper then newspaper = true break end
             end
         end
-        if type(item) == 'table' and (newspaper or item.name == BUNDLE) and type(item.info) == 'table' and item.info.journal_id == journalId then
-            local count
-            if item.name == BUNDLE then
-                count = math.floor(tonumber(item.info.count) or 0)
-            else
-                count = math.floor(tonumber(item.amount) or 1)
-            end
-            if count > 0 then found[#found + 1] = { slot = tonumber(item.slot) or tonumber(key) or 0, item = item, count = count, bundle = item.name == BUNDLE } end
+        if newspaper and type(item.info) == 'table' and item.info.journal_id == journalId then
+            local count = math.floor(tonumber(item.amount) or 1)
+            if count > 0 then found[#found + 1] = { slot = tonumber(item.slot) or tonumber(key) or 0, item = item, count = count } end
         end
     end
-    table.sort(found, function(a, b)
-        if a.bundle ~= b.bundle then return not a.bundle end          -- objets seuls d'abord, lots ensuite
-        return a.slot < b.slot
-    end)
+    table.sort(found, function(a, b) return a.slot < b.slot end)
     return found
 end
 
@@ -680,25 +673,14 @@ local function InventoryCopies(Player, journalId)
     return total
 end
 
--- Retire `amount` exemplaires de l'inventaire ; renvoie le nombre réellement retiré.
+-- Retire `amount` exemplaires seuls de l'inventaire (jamais de lot) ; renvoie le nombre réellement retiré.
 local function TakeCopies(Player, journalId, amount)
     local took = 0
     for _, entry in ipairs(InventorySlots(Player, journalId)) do
         if took >= amount then break end
-        if entry.bundle then
-            local use = math.min(entry.count, amount - took)
-            if use >= entry.count then
-                if not Player.Functions.RemoveItem(BUNDLE, 1, entry.slot) then break end
-            else
-                entry.item.info.count = entry.count - use
-                Player.Functions.UpdatePlayerItems(entry.slot)
-            end
-            took = took + use
-        else
-            local use = math.min(entry.count, amount - took)
-            if not Player.Functions.RemoveItem(entry.item.name, use, entry.slot) then break end
-            took = took + use
-        end
+        local use = math.min(entry.count, amount - took)
+        if not Player.Functions.RemoveItem(entry.item.name, use, entry.slot) then break end
+        took = took + use
     end
     return took
 end
