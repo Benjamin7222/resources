@@ -10,7 +10,7 @@ Config.Camera = { forward = 0.2, height = 0.6, targetHeight = 0.4, fov = 55.0 }
 
 Config.MaxPostersPerCategory = 30   -- affiches actives par pays et par catégorie (surchargeable : max = ... dans la catégorie)
 Config.MaxTitleLength = 60
-Config.MaxUrlLength = 500
+Config.MaxUrlLength = 100
 Config.SaveCooldown = 3             -- secondes entre deux publications/modifications d'un joueur
 
 

@@ -358,15 +358,6 @@ local function CleanLine(value, maxLength)
     return value
 end
 
--- Liens Discord interdits : cdn.discordapp.com / media.discordapp.net expirent au bout de quelques heures (URLs signées).
-local DISCORD_HOSTS = { 'discordapp.com', 'discordapp.net', 'discord.com', 'discord.gg' }
-local function IsDiscordHost(host)
-    for _, domain in ipairs(DISCORD_HOSTS) do
-        if host == domain or host:sub(-(#domain + 1)) == '.' .. domain then return true end
-    end
-    return false
-end
-
 local function CleanUrl(value)
     if value == nil then return '' end
     if type(value) ~= 'string' then return nil end
@@ -376,7 +367,6 @@ local function CleanUrl(value)
     if not value:find('^https?://') then return nil end
     if value:find('[%s%c"\'<>`\\]') then return nil end
     local host = (value:match('^https?://([^/:?#]+)') or ''):lower()
-    if IsDiscordHost(host) then return nil, 'discord' end
     if #Config.AllowedHosts > 0 then
         for _, allowed in ipairs(Config.AllowedHosts) do
             if host == allowed:lower() then return value end
@@ -943,11 +933,8 @@ local function Validate(ctx, data)
     if not title then return nil, 'Le titre est trop long (' .. Config.MaxTitleLength .. ' caractères max).' end
     if title == '' then return nil, 'Le titre est obligatoire.' end
 
-    local url, urlErr = CleanUrl(data.url)
-    if not url then
-        if urlErr == 'discord' then return nil, 'Les liens Discord sont interdits : ils expirent au bout de quelques heures. Utilise un autre hébergeur d\'images (imgur, imgbb, etc.).' end
-        return nil, 'Le lien de l\'image est invalide.'
-    end
+    local url = CleanUrl(data.url)
+    if not url then return nil, 'Le lien de l\'image est invalide.' end
 
     local job = ctx.Player.PlayerData.job
     return { title = title, url = url, org = job and job.label or '' }
