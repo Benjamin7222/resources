@@ -6,7 +6,7 @@ local inInventory = false
 local isHotbar = false
 local CurrentStash
 local CurrentDrop
-local isLoggedIn
+local isLoggedIn = LocalPlayer.state.isLoggedIn
 local Drops = {}
 
 --------------------------------------------------------------------------
@@ -345,21 +345,19 @@ end)
 ---- THREADS
 --------------------------------------------------------------------------
 
-CreateThread(function()
-    while true do
-        Wait(0)
-        if IsDisabledControlJustReleased(0, 0xB238FE0B) and IsInputDisabled(0) then -- key open inventory Tab Key
-				if not PlayerData.metadata["isdead"] and not PlayerData.metadata["inlaststand"] and not PlayerData.metadata["ishandcuffed"] and not IsPauseMenuActive() then
-					local ped = PlayerPedId()
-                    if CurrentDrop ~= 0 then
-						TriggerServerEvent("inventory:server:OpenInventory", "drop", CurrentDrop)
-					else
-						TriggerServerEvent("inventory:server:OpenInventory")
-                end
-            end
-        end
+RegisterCommand('inventaire', function()
+    local metadata = PlayerData.metadata
+    if not isLoggedIn or not metadata or inInventory or IsPauseMenuActive() then return end
+    if metadata.isdead or metadata.inlaststand or metadata.ishandcuffed then return end
+
+    if CurrentDrop and CurrentDrop ~= 0 then
+        TriggerServerEvent("inventory:server:OpenInventory", "drop", CurrentDrop)
+    else
+        TriggerServerEvent("inventory:server:OpenInventory")
     end
-end)
+end, false)
+
+RegisterKeyMapping('inventaire', 'Ouvrir l inventaire', 'keyboard', 'I')
 
 CreateThread(function()
     while true do
@@ -370,8 +368,11 @@ CreateThread(function()
         DisableControlAction(0, 0x8F9F9E58)
         DisableControlAction(0, 0xAB62E997)
         DisableControlAction(0, 0x26E9DC00)
-        DisableControlAction(0, 0xAC4BD4F1) -- Disable Weapon Wheel and Item Wheel
-        DisableControlAction(0, 0xB238FE0B) -- Disable Quick Select for Weapons
+        -- Keep native weapon selection available outside the inventory.
+        if inInventory then
+            DisableControlAction(0, 0xAC4BD4F1, true)
+            DisableControlAction(0, 0xB238FE0B, true)
+        end
         if IsDisabledControlPressed(0, 0xE6F612E4) and IsInputDisabled(0) then  -- 1  slot
 			if not PlayerData.metadata["isdead"] and not PlayerData.metadata["inlaststand"] and not PlayerData.metadata["ishandcuffed"] then
 				TriggerServerEvent("inventory:server:UseItemSlot", 1)

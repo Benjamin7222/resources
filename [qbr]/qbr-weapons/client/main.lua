@@ -144,6 +144,9 @@ end)
 RegisterNetEvent('qbr-weapons:client:AddAmmo', function(atype, amount, itemData)
     local ped = PlayerPedId()
     local weapon = atype ~= 'AMMO_ARROW' and Citizen.InvokeNative(0x8425C5F057012DAB,ped) or Citizen.InvokeNative(0xDBC4B552B2AE9A83, ped, joaat('slot_bow'))
+    if not Weapons[weapon] then
+        return exports['qbr-core']:Notify(9, 'Placez votre arme dans les emplacements 1 a 5 et equipez-la avant de recharger.', 5000, 0, 'mp_lobby_textures', 'cross', 'COLOR_WHITE')
+    end
     if Citizen.InvokeNative(0x5C2EA6C44F515F34, weapon) == joaat(atype) then
         local total = GetAmmoInPedWeapon(ped, weapon)
         if total <= 1 then
@@ -153,7 +156,7 @@ RegisterNetEvent('qbr-weapons:client:AddAmmo', function(atype, amount, itemData)
             }, {}, {}, {}, function() -- Done
                 local weaponData = Weapons[weapon]
                 if weaponData then
-                    if weaponData.info?.quality <= 0 then
+                    if (tonumber(weaponData.info.quality) or 100) <= 0 then
                         return  exports['qbr-core']:Notify(9, 'Impossible de recharger une arme cassée', 5000, 0, 'mp_lobby_textures', 'cross', 'COLOR_WHITE')
                     end
                     if atype == 'AMMO_ARROW' then
@@ -161,6 +164,7 @@ RegisterNetEvent('qbr-weapons:client:AddAmmo', function(atype, amount, itemData)
                         SetCurrentPedWeapon(ped, weapon, true)
                     else
                         if atype == 'AMMO_REVOLVER' or atype == 'AMMO_PISTOL' then
+                            SetPedAmmo(ped, weapon, maxammo)
                             SetAmmoInClip(ped, weapon, maxammo)
                         else
                             SetPedAmmo(ped, weapon, maxammo)
@@ -168,7 +172,7 @@ RegisterNetEvent('qbr-weapons:client:AddAmmo', function(atype, amount, itemData)
                         TaskReloadWeapon(ped)
                     end
                     TriggerServerEvent('QBCore:Server:RemoveItem', itemData.name, 1, itemData.slot)
-                    TriggerEvent('inventory:client:ItemBox', itemData.name, "remove")
+                    TriggerEvent('inventory:client:ItemBox', sharedItems[itemData.name], "remove")
                 end
             end, function()
                 exports['qbr-core']:Notify(9, Lang:t('error.canceled'), 5000, 0, 'mp_lobby_textures', 'cross', 'COLOR_WHITE')
