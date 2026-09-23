@@ -853,6 +853,7 @@ RegisterCallback('Sunny-affiches:server:Open', function(source, cb, boardId)
                 countries = cat.inCountry, create = create,
                 anonymous = cat.anonymous == true,
                 durations = cat.durations, defaultDays = cat.defaultDays,
+                group = cat.group, groupLabel = cat.groupLabel,
             }
         end
     end

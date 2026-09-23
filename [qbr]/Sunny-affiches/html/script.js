@@ -24,7 +24,7 @@ async function post(name, data) {
 const state = {
     open: false, board: null, countries: [], country: null, cats: [], counts: {},
     current: null, posters: [], limits: {}, busy: false, gen: 0,
-    detail: null, editing: null,
+    detail: null, editing: null, expandedGroup: null,
     journal: { enabled: false }, editions: [], editionToken: 0,
 };
 
@@ -130,7 +130,51 @@ function renderCountries() {
 function renderCats() {
     const nav = $('cats');
     nav.replaceChildren();
-    for (const cat of catsHere()) {
+    const here = catsHere();
+    const seenGroups = new Set();
+    for (const cat of here) {
+        if (cat.group) {
+            if (seenGroups.has(cat.group)) continue;
+            seenGroups.add(cat.group);
+            const groupCats = here.filter((c) => c.group === cat.group);
+            const groupHasCurrent = groupCats.some((c) => c.key === state.current);
+            const expanded = state.expandedGroup === cat.group || groupHasCurrent;
+
+            const btn = el('button', 'cat group' + (groupHasCurrent ? ' active' : '') + (expanded ? ' expanded' : ''));
+            btn.style.setProperty('--cat', cat.color || '#b59b6b');
+            btn.appendChild(el('span', 'chevron', expanded ? '▾' : '▸'));
+            btn.appendChild(el('span', 'label', cat.groupLabel || cat.group));
+            if (groupCats.some((c) => c.create[state.country])) {
+                const can = el('span', 'can', 'Publier');
+                can.title = 'Tu peux afficher dans au moins une mairie';
+                btn.appendChild(can);
+            }
+            const total = groupCats.reduce((sum, c) => sum + countFor(state.country, c.key), 0);
+            btn.appendChild(el('span', 'count', String(total)));
+            btn.addEventListener('click', () => {
+                state.expandedGroup = state.expandedGroup === cat.group ? null : cat.group;
+                renderCats();
+            });
+            nav.appendChild(btn);
+
+            if (expanded) {
+                for (const sub of groupCats) {
+                    const subBtn = el('button', 'cat sub' + (sub.key === state.current ? ' active' : ''));
+                    subBtn.style.setProperty('--cat', sub.color || cat.color || '#b59b6b');
+                    subBtn.appendChild(el('span', 'label', sub.label));
+                    if (sub.create[state.country]) {
+                        const can = el('span', 'can', 'Publier');
+                        can.title = 'Tu peux afficher dans cette catégorie';
+                        subBtn.appendChild(can);
+                    }
+                    subBtn.appendChild(el('span', 'count', String(countFor(state.country, sub.key))));
+                    subBtn.addEventListener('click', () => selectCategory(sub.key));
+                    nav.appendChild(subBtn);
+                }
+            }
+            continue;
+        }
+
         const btn = el('button', 'cat' + (cat.key === state.current ? ' active' : ''));
         btn.style.setProperty('--cat', cat.color || '#b59b6b');
         btn.appendChild(el('span', 'label', cat.label));

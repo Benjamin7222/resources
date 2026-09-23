@@ -74,12 +74,44 @@ Config.Categories = {
         defaultDays = 14,
     },
     {
-        key = 'fdo',
-        label = 'Forces de l\'ordre',
+        key = 'mairie_we',
+        label = 'Mairie WE',
         color = '#2f4a6b',
-        desc = 'Avis, consignes et communiqués des forces de l\'ordre.',
-        durations = { 1, 3, 7, 14, 30, 0 },
-        defaultDays = 7,
+        desc = 'Avis et communiqués de la mairie de West Elizabeth.',
+
+        countries = { 'usa' },
+        group = 'mairie',
+        groupLabel = 'Mairie',
+
+        durations = { 3, 7, 14, 30, 0 },
+        defaultDays = 14,
+    },    
+    {
+        key = 'mairie_nh',
+        label = 'Mairie NH',
+        color = '#2f4a6b',
+        desc = 'Avis et communiqués de la mairie de New Hanover.',
+
+        -- MAIRIE UNIQUEMENT AUX ÉTATS-UNIS ; regroupée sous un seul bouton "Mairie" cote client
+        countries = { 'usa' },
+        group = 'mairie',
+        groupLabel = 'Mairie',
+
+        durations = { 3, 7, 14, 30, 0 },
+        defaultDays = 14,
+    },
+    {
+        key = 'mairie_lemoyne',
+        label = 'Mairie Lemoyne',
+        color = '#2f4a6b',
+        desc = 'Avis et communiqués de la mairie de Lemoyne.',
+
+        countries = { 'usa' },
+        group = 'mairie',
+        groupLabel = 'Mairie',
+
+        durations = { 3, 7, 14, 30, 0 },
+        defaultDays = 14,
     },
     {
         key = 'justice',
@@ -127,7 +159,9 @@ Config.Categories = {
 Config.Jobs = {
     usa = {
         gouvernement = { publier = { 'gouvernement' }, gerer = { gouvernement = 3, } },
-        fdo          = { publier = { '_sheriff_newhanoverlua','police_lemoyne','_sheriff_westelizabethlua','marshal' },     gerer = { _sheriff_newhanoverlua = 3, police_lemoyne = 3, _sheriff_westelizabethlua = 3, marshal = 3 } },
+        mairie_nh       = { publier = {'maire_newhanover'}, gerer = {3} },
+        mairie_we       = { publier = {'maire_westelizabeth'}, gerer = {3} },
+        mairie_lemoyne  = { publier = {'maire_lemoyne'}, gerer = {3} },
         justice      = { publier = { 'justice' },        gerer = { justice = 5 } },
         wanted       = { publier = { 'justice','marshal' },     gerer = { justice = 4, marshal = 3 } },
         journal      = {
@@ -137,14 +171,12 @@ Config.Jobs = {
     },
     mexique = {
         gouvernement = { publier = {'maire_newaustin'}, gerer = {maire_newaustin = 3} },
-        fdo          = { publier = {'guardia'}, gerer = {guardia = 3} },
         justice      = { publier = {'maire_newaustin'}, gerer = {maire_newaustin = 3} },
         wanted       = { publier = {'maire_newaustin'}, gerer = {maire_newaustin = 3} },
         journal      = { publier = {'journaliste_newaustin'}, gerer = {journaliste_newaustin = 3} },
     },
     guarma = {
         gouvernement = { publier = {'guarma'}, gerer = {guarma = 3} },
-        fdo          = { publier = {'milicedeguarma'}, gerer = {milicedeguarma = 3} },
         justice      = { publier = {'guarma'}, gerer = {guarma = 3} },
         wanted       = { publier = {'guarma'}, gerer = {guarma = 3} },
         journal      = { publier = {'journaliste_guarma'}, gerer = {journaliste_guarma = 3} },
