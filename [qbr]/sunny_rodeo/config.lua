@@ -3,7 +3,7 @@ Config = {}
 Config.Debug = false
 
 Config.Arena = {
-    name    = 'Rodéo de Valentine',
+    name    = 'Rodéo',
     center  = vector3(526.3021, -233.0454, 146.8617),
     heading = 260.3087,
 

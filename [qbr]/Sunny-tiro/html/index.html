@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tiro Mexicano</title><link rel="stylesheet" href="style.css"></head>
+<body><main id="app">
+<div id="targetArrows" aria-hidden="true"></div>
+<section id="welcome" class="panel welcome hidden" role="dialog" aria-label="Stand de tir">
+<div class="eyebrow">★ &nbsp; LE DÉFI DES FINS TIREURS &nbsp; ★</div>
+<div class="ornament">◆ ━━━━━ ◆ ━━━━━ ◆</div>
+<h2 id="welcomeTitle">TIRO MEXICANO</h2><div class="tagline">Une main sûre. Un œil vif.</div>
+<div class="ticket"><div><small>DROIT D’ENTRÉE</small><strong><span id="entryFee">5</span> $</strong></div><div><small>CIBLES</small><strong id="entryTargets">9</strong></div><div><small>CHRONO</small><strong><span id="entryTime">20</span> s</strong></div></div>
+<p class="rules">Les cibles arrivent par deux. Abattez-les pour avancer.<br>La dernière ne vous laissera aucun répit.</p>
+<p id="difficultyRules" class="rules"></p>
+<p>Venez à pied, avec votre arme et vos munitions.</p>
+<div class="actions"><button class="primary" data-action="start">ENTRER EN PISTE</button><button data-action="leaderboard">TABLEAU D’HONNEUR</button><button class="quiet" onclick="closeUI()">QUITTER LE STAND</button></div>
+<div class="footer-note">◆ &nbsp; Seule votre adresse fera votre renommée &nbsp; ◆</div>
+</section>
+<section id="preparation" class="preparation hidden" aria-live="polite">
+<div class="eyebrow">TIRO MEXICANO</div><strong id="preparationValue">3</strong>
+<div id="preparationLabel">Preparez-vous</div><p>/tirostop pour annuler</p>
+</section>
+<section id="game" class="hud hidden" aria-label="Partie en cours">
+<div class="eyebrow" id="subtitle">CAMPEONATO DE TIRO</div><h1 id="title">TIRO MEXICANO</h1>
+<div class="hud-stats"><div><small>CIBLES</small><strong><span id="score">0</span><em> / <span id="maxScore">10</span></em></strong></div><div class="clock"><small>TEMPS RESTANT</small><strong><span id="timer">30</span><em> s</em></strong></div></div>
+<div id="dots" class="dots"></div><div class="time-track"><div id="timeBar"></div></div><p>Une cible, un point · /tirostop pour quitter</p>
+<div class="ammo-counter"><span id="shotsLeft">12</span> TIRS RESTANTS <span id="finalWarning" class="hidden">◆ DERNIÈRE CIBLE</span></div>
+</section>
+<section id="result" class="panel hidden" role="dialog" aria-label="Résultat">
+<div class="eyebrow">ÉPREUVE TERMINÉE</div><h2>TIRO <span>MEXICANO</span></h2>
+<div class="result-score"><strong id="resultScore">0</strong><span> / <b id="resultMax">10</b></span></div>
+<div id="record" class="record hidden">NOUVEAU RECORD</div>
+<p>Temps de la partie : <strong id="resultTime">—</strong></p>
+<p>Tirs effectués : <strong id="resultShots">—</strong></p>
+<div id="resultVerdict" class="tagline"></div>
+<div class="actions"><button data-action="leaderboard">TABLEAU D’HONNEUR</button></div>
+<button type="button" onclick="closeUI()">CONTINUER</button><p>Échap pour fermer</p>
+</section>
+<section id="leaderboard" class="panel hidden" role="dialog" aria-label="Classement">
+<div class="eyebrow">LES MEILLEURS TIREURS</div><h2>TIRO <span>MEXICANO</span></h2>
+<div class="thead"><span>#</span><span>JOUEUR</span><span>SCORE</span><span>TEMPS</span><span>TIRS</span></div><div id="rows"></div>
+<p>Score le plus haut, puis temps le plus court.<br>Temps et tirs correspondent à la partie du record.<br>— : donnée non enregistrée pour cet ancien record.</p>
+<p>Temps de votre record : <strong id="personalTime">—</strong></p>
+<p>Tirs de votre record : <strong id="personalShots">—</strong></p>
+<div class="personal"><small>TON RECORD</small><strong id="personal">0 / 10</strong></div>
+<div class="actions"><button data-action="welcome">RETOUR AU STAND</button></div>
+<button type="button" onclick="closeUI()">FERMER</button><p>Échap pour fermer</p>
+</section></main><script src="app.js"></script></body></html>
