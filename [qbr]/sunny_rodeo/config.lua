@@ -150,18 +150,18 @@ Config.Fall = {
     throwSpeed = 4.5,
 }
 
-Config.XP = { perSecond = 0.25, perCombo = 2.0, maxBonus = 5 }
+Config.XP = { perSecond = 0.25, perCombo = 1.0, maxBonus = 2 }
 
 Config.Levels = {
     { xp = 0,    title = 'Bleu-bec' },
-    { xp = 200,  title = 'Apprenti cow-boy' },
-    { xp = 600,  title = 'Cavalier' },
-    { xp = 1500, title = 'Dompteur' },
-    { xp = 3500, title = 'Champion' },
-    { xp = 7500, title = 'Légende du rodéo' },
+    { xp = 2000,  title = 'Apprenti cow-boy' },
+    { xp = 5000,  title = 'Cavalier' },
+    { xp = 8500, title = 'Dompteur' },
+    { xp = 10000, title = 'Champion' },
+    { xp = 20000, title = 'Légende du rodéo' },
 }
 
 Config.TopSize = 15
-Config.AnnounceRecord = true
+Config.AnnounceRecord = false
 
 Config.AdminGroups = { 'god', 'admin' }
