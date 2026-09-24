@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>sunny_horseshoes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section id="hud" class="card hidden">
+        <h1>Lancer de fer</h1>
+        <div class="rule"></div>
+        <div id="hud-lobby" class="hidden">
+            <p class="line">En attente de joueurs</p>
+            <p class="big" id="lobby-count">1 / 2</p>
+            <p class="note" id="lobby-note"></p>
+        </div>
+        <div id="hud-game">
+            <p class="line">Round : <b id="hud-round">1 / 5</b></p>
+            <div id="hud-scores"></div>
+            <p class="line">Lancers restants : <b id="hud-throws">3</b></p>
+            <div class="rule thin"></div>
+            <p id="hud-turn" class="turn"></p>
+        </div>
+        <p class="note hud-quit"><kbd>Retour</kbd> quitter la partie</p>
+    </section>
+
+    <section id="aim" class="hidden">
+        <div class="gauge">
+            <div class="gauge-fill" id="gauge-fill"></div>
+            <div class="gauge-ticks"></div>
+            <span class="gauge-label">Puissance</span>
+        </div>
+        <div class="aimbar">
+            <div class="aimbar-track"></div>
+            <div class="aimbar-needle" id="aim-needle"></div>
+            <span class="aimbar-label">Visée</span>
+        </div>
+        <p class="keys"><kbd>Espace</kbd> maintenir puis relâcher &nbsp;·&nbsp; <kbd>A</kbd>/<kbd>D</kbd> ou <kbd>←</kbd>/<kbd>→</kbd> viser &nbsp;·&nbsp; <kbd>Retour</kbd> quitter</p>
+    </section>
+
+    <section id="popup" class="hidden">
+        <p class="popup-who" id="popup-who"></p>
+        <p class="popup-points" id="popup-points">+3 POINTS</p>
+        <p class="popup-label" id="popup-label">FER ACCROCHÉ !</p>
+    </section>
+
+    <section id="banner" class="hidden"><span id="banner-text">ROUND 1 / 5</span></section>
+
+    <section id="final" class="card hidden">
+        <h1>Fin de partie</h1>
+        <div class="rule"></div>
+        <div id="final-rows"></div>
+        <div class="rule thin"></div>
+        <p id="final-winner" class="winner"></p>
+        <p id="final-note" class="note"></p>
+    </section>
+
+    <section id="bet" class="card hidden">
+        <button id="bet-close" class="close" title="Annuler">&times;</button>
+        <h1 id="bet-title">Défi au lancer de fer</h1>
+        <p class="subtitle" id="bet-subtitle">Le gagnant rafle le pot</p>
+        <div class="rule"></div>
+        <div id="bet-create">
+            <p class="bet-label">Mise par joueur</p>
+            <div class="bet-amount">
+                <input id="bet-input" type="number" inputmode="numeric" step="1" autocomplete="off">
+                <span>$</span>
+            </div>
+            <div class="bet-quick" id="bet-quick"></div>
+            <p class="note" id="bet-range"></p>
+        </div>
+        <div id="bet-join" class="hidden">
+            <p class="bet-label" id="bet-join-host"></p>
+            <p class="bet-big" id="bet-join-amount">0 $</p>
+            <p class="note">Cette somme te sera prélevée au début de la partie.</p>
+        </div>
+        <p class="bet-pot" id="bet-pot"></p>
+        <p class="bet-error hidden" id="bet-error"></p>
+        <div class="bet-actions">
+            <button class="btn ghost" id="bet-cancel">Annuler</button>
+            <button class="btn" id="bet-ok">Créer la partie</button>
+        </div>
+    </section>
+
+    <section id="board" class="card hidden">
+        <button id="board-close" class="close" title="Fermer">&times;</button>
+        <h1>Classement</h1>
+        <p class="subtitle">Lancer de fer à cheval</p>
+        <div class="tabs">
+            <button data-sort="score" class="tab active">Meilleur score</button>
+            <button data-sort="ringers" class="tab">Fers accrochés</button>
+            <button data-sort="wins" class="tab">Victoires</button>
+        </div>
+        <div class="rule"></div>
+        <table class="board-table">
+            <thead><tr><th>#</th><th>Joueur</th><th id="board-col">Score</th><th>Parties</th></tr></thead>
+            <tbody id="board-rows"></tbody>
+        </table>
+        <div id="board-me" class="board-me hidden"></div>
+        <p class="note">Retour arrière ou Échap pour fermer</p>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
