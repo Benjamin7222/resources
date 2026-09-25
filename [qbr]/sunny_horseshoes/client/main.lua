@@ -291,20 +291,20 @@ local function AddZones()
             options = {
                 {
                     name = 'sunny_horseshoes_solo', icon = 'fa-solid fa-horse', distance = Config.Interaction.distance,
-                    label = 'Lancer de fer : jouer seul (entraînement)',
+                    label = 'Lancer de fer : jouer seul',
                     canInteract = function() return Free(pit) end,
                     onSelect = function() HS.Action(pit, 'solo') end,
                 },
                 {
                     name = 'sunny_horseshoes_multi', icon = 'fa-solid fa-users', distance = Config.Interaction.distance,
-                    label = Config.Bet.enabled and 'Lancer de fer : créer une partie à plusieurs (avec pari)'
+                    label = Config.Bet.enabled and 'créer une partie à plusieurs'
                         or 'Lancer de fer : créer une partie à plusieurs',
                     canInteract = function() return Free(pit) and pit.maxPlayers > 1 end,
                     onSelect = function() HS.Action(pit, 'creer') end,
                 },
                 {
                     name = 'sunny_horseshoes_join', icon = 'fa-solid fa-right-to-bracket', distance = Config.Interaction.distance,
-                    label = Config.Bet.enabled and 'Rejoindre la partie de fer à cheval (suivre la mise)'
+                    label = Config.Bet.enabled and 'Rejoindre la partie'
                         or 'Rejoindre la partie de fer à cheval',
                     canInteract = function()
                         local st = HS.States[pit.id]
