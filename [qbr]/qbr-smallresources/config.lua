@@ -1,5 +1,8 @@
 Config = {}
 
+-- Vide : utilise sv_projectName, puis sv_hostname. Aucun bouton Discord.
+Config.DiscordServerName = ''
+
 ConsumeablesEat = {
     ["sandwich"] = math.random(35, 54),
     ["apple"] = math.random(10, 25),
