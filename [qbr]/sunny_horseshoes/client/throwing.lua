@@ -107,7 +107,7 @@ end
 
 local DisabledKeys = {
     Config.Controls.throw, Config.Controls.left, Config.Controls.right,
-    Config.Controls.left2, Config.Controls.right2, Config.Controls.quit,
+    Config.Controls.quit,
     0x07CE1E61, 0xF84FA74F, 0x8FFC75D6,
 }
 
@@ -191,6 +191,7 @@ function HS.StartAim(pitId, turnId)
         local cycle = math.max(200, Config.Power.cycleMs)
         local aimDeg, power, charging, chargeStart = 0.0, 0.0, false, 0
         local last, lastUi = GetGameTimer(), 0
+        local sentPower, sentAim, sentCharging
         HS.SendUI({ action = 'aim', show = true })
 
         while Valid() do
@@ -204,8 +205,8 @@ function HS.StartAim(pitId, turnId)
                 break
             end
 
-            local l = IsDisabledControlPressed(0, C.left) or IsDisabledControlPressed(0, C.left2)
-            local r = IsDisabledControlPressed(0, C.right) or IsDisabledControlPressed(0, C.right2)
+            local l = IsDisabledControlPressed(0, C.left)
+            local r = IsDisabledControlPressed(0, C.right)
             if l ~= r then
                 aimDeg = Sim.Clamp(aimDeg + (r and 1 or -1) * Config.Aim.speed * dt, -maxA, maxA)
             end
@@ -228,8 +229,9 @@ function HS.StartAim(pitId, turnId)
                 end
             end
 
-            if now - lastUi > 40 then
+            if now - lastUi > 40 and (power ~= sentPower or aimDeg ~= sentAim or charging ~= sentCharging) then
                 lastUi = now
+                sentPower, sentAim, sentCharging = power, aimDeg, charging
                 HS.SendUI({ action = 'power', power = power, aim = aimDeg / maxA, charging = charging })
             end
             Wait(0)

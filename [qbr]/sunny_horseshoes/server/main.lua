@@ -81,12 +81,14 @@ local PlayerPit = {}
 local GameSeq = 0
 
 for i, def in ipairs(Config.HorseshoePits) do
-    local pit = Sim.Pit(def, i)
-    if Pits[pit.id] then
-        print(('^1[sunny_horseshoes] id de terrain en double : %s (ignoré)^7'):format(pit.id))
-    else
-        Pits[pit.id] = { pit = pit, game = nil }
-        PitOrder[#PitOrder + 1] = pit.id
+    if def.enabled ~= false then
+        local pit = Sim.Pit(def, i)
+        if Pits[pit.id] then
+            print(('^1[sunny_horseshoes] id de terrain en double : %s (ignoré)^7'):format(pit.id))
+        else
+            Pits[pit.id] = { pit = pit, game = nil }
+            PitOrder[#PitOrder + 1] = pit.id
+        end
     end
 end
 
@@ -147,10 +149,30 @@ local function Public(entry)
     return s
 end
 
+local function CanReceiveState(src, entry)
+    if PlayerPit[src] == entry.pit.id then return true end
+    local c = PedCoords(src)
+    return c and (Dist2D(c, entry.pit.S) <= Config.SyncDistance + 20.0
+        or Dist2D(c, entry.pit.coords) <= Config.SyncDistance + 20.0)
+end
+
 local function Broadcast(id, target)
     local entry = Pits[id]
     if not entry then return end
-    TriggerClientEvent('sunny_horseshoes:client:PitState', target or -1, id, Public(entry))
+    if target then
+        if CanReceiveState(target, entry) then
+            TriggerClientEvent('sunny_horseshoes:client:PitState', target, id, Public(entry))
+        end
+        return
+    end
+    local state
+    for _, pid in ipairs(GetPlayers()) do
+        local src = tonumber(pid)
+        if src and CanReceiveState(src, entry) then
+            state = state or Public(entry)
+            TriggerClientEvent('sunny_horseshoes:client:PitState', src, id, state)
+        end
+    end
 end
 
 local function NotifyGame(game, text, success)
@@ -230,15 +252,37 @@ local function SaveStats(game, rows, winners, reason)
     end)
 end
 
+local BoardCache, BoardRequests, BoardLists = {}, {}, {}
+local StateRequests = {}
+
 QBCore:CreateCallback('sunny_horseshoes:server:Board', function(source, cb, data)
     if not (Config.Leaderboard.enabled and DbReady) then
         return cb({ ok = false, error = "Le classement n'est pas disponible." })
     end
     local sort = type(data) == 'table' and BOARD_SORTS[data.sort] and data.sort or 'score'
     local col = BOARD_SORTS[sort]
+    local now = Now()
+    local request = BoardRequests[source]
+    if request and (request.busy or now - request.at < 500) then
+        return cb({ ok = false, error = 'Patiente un instant avant de recharger le classement.' })
+    end
+    local cached = BoardCache[source] and BoardCache[source][sort]
+    if cached and now - cached.at < 20000 then
+        BoardRequests[source] = { at = now, busy = false }
+        return cb(cached.value)
+    end
+    request = { at = now, busy = true }
+    BoardRequests[source] = request
     local ok, res = pcall(function()
         local size = math.max(1, math.min(50, math.floor(Config.Leaderboard.size or 10)))
-        local list = MySQL.query.await(('SELECT citizenid, name, best_score, games, wins, ringers, throws FROM horseshoes_players WHERE games > 0 ORDER BY %s DESC, games ASC, name ASC LIMIT %d'):format(col, size)) or {}
+        local shared = BoardLists[sort]
+        local list
+        if shared and now - shared.at < 20000 then
+            list = shared.value
+        else
+            list = MySQL.query.await(('SELECT citizenid, name, best_score, games, wins, ringers, throws FROM horseshoes_players WHERE games > 0 ORDER BY %s DESC, games ASC, name ASC LIMIT %d'):format(col, size)) or {}
+            BoardLists[sort] = { at = now, value = list }
+        end
         local cid = Bridge.CitizenId(source)
         local rows, meRow = {}, nil
         for i, r in ipairs(list) do
@@ -254,10 +298,14 @@ QBCore:CreateCallback('sunny_horseshoes:server:Board', function(source, cb, data
         end
         return { ok = true, sort = sort, rows = rows, me = meRow }
     end)
+    request.busy = false
+    if BoardRequests[source] ~= request then return end
     if not ok then
         print('^1[sunny_horseshoes] classement : ' .. tostring(res) .. '^7')
         return cb({ ok = false, error = 'Erreur du classement, réessaie.' })
     end
+    BoardCache[source] = BoardCache[source] or {}
+    BoardCache[source][sort] = { at = BoardLists[sort] and BoardLists[sort].at or now, value = res }
     cb(res)
 end)
 
@@ -573,12 +621,21 @@ RegisterNetEvent('sunny_horseshoes:server:Throw', function(id, turnId, power, ai
     end
 end)
 
-RegisterNetEvent('sunny_horseshoes:server:RequestStates', function()
+RegisterNetEvent('sunny_horseshoes:server:RequestStates', function(id)
     local src = source
-    for _, id in ipairs(PitOrder) do Broadcast(id, src) end
+    if id ~= nil and (type(id) ~= 'string' or not Pits[id]) then return end
+    local key = id or '*'
+    local now = Now()
+    StateRequests[src] = StateRequests[src] or {}
+    local previous = StateRequests[src][key]
+    if previous and now - previous < 500 then return end
+    StateRequests[src][key] = now
+    if id then return Broadcast(id, src) end
+    for _, pitId in ipairs(PitOrder) do Broadcast(pitId, src) end
 end)
 
 AddEventHandler('playerDropped', function()
+    BoardCache[source], BoardRequests[source], StateRequests[source] = nil, nil, nil
     RemovePlayer(source, 'drop')
 end)
 

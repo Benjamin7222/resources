@@ -184,6 +184,7 @@ RegisterNetEvent('sunny_horseshoes:client:Left', function(pitId)
 end)
 
 function HS.OnPitNear(pitId)
+    TriggerServerEvent('sunny_horseshoes:server:RequestStates', pitId)
     local st = HS.States[pitId]
     ReconcileShoes(pitId, st)
     ReconcileHands(pitId, st)

@@ -13,10 +13,12 @@ HS = {
 }
 
 for i, def in ipairs(Config.HorseshoePits) do
-    local pit = Sim.Pit(def, i)
-    if not HS.Pits[pit.id] then
-        HS.Pits[pit.id] = pit
-        HS.PitList[#HS.PitList + 1] = pit
+    if def.enabled ~= false then
+        local pit = Sim.Pit(def, i)
+        if not HS.Pits[pit.id] then
+            HS.Pits[pit.id] = pit
+            HS.PitList[#HS.PitList + 1] = pit
+        end
     end
 end
 

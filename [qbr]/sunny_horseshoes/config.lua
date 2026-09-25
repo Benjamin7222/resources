@@ -114,10 +114,8 @@ Config.Interaction = {
 
 Config.Controls = {
     throw = 0xD9D0E1C0,
-    left = 0x7065027D,
-    right = 0xB4E465B4,
-    left2 = 0xA65EBAB4,
-    right2 = 0xDEB34313,
+    left = 0xA65EBAB4,
+    right = 0xDEB34313,
     quit = 0x156F7119,
 }
 
@@ -152,6 +150,26 @@ Config.HorseshoePits = {
         maxPlayers = 2,
         npc = {
             coords = vector4(-817.6855, -1383.9614, 43.6581, 86.0928),
+            model = 'u_m_m_wtccowboy_04',
+        },
+    },
+    {
+        enabled = false, -- Passer a true une fois les positions configurees.
+        id = 'terrain2',
+        label = 'Terrain de lancer de fer 2',
+        -- Positions de lancer : une par manche, reutilisees en boucle.
+        throwPoints = {
+            vector3(0.0, 0.0, 0.0), -- Manche 1 : x, y, z du sol.
+            vector3(0.0, 0.0, 0.0), -- Manche 2.
+            vector3(0.0, 0.0, 0.0), -- Manche 3.
+            vector3(0.0, 0.0, 0.0), -- Manche 4.
+            vector3(0.0, 0.0, 0.0), -- Manche 5.
+        },
+        stakePoint = vector3(0.0, 0.0, 0.0), -- Position du piquet au sol.
+        heading = 0.0, -- Orientation du piquet en degres ; visee automatique vers lui.
+        maxPlayers = 2,
+        npc = {
+            coords = vector4(0.0, 0.0, 0.0, 0.0), -- PNJ : x, y, z, orientation.
             model = 'u_m_m_wtccowboy_04',
         },
     },
