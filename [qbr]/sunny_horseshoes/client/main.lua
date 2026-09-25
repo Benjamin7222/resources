@@ -297,7 +297,7 @@ local function AddZones()
                 },
                 {
                     name = 'sunny_horseshoes_multi', icon = 'fa-solid fa-users', distance = Config.Interaction.distance,
-                    label = Config.Bet.enabled and 'créer une partie à plusieurs'
+                    label = Config.Bet.enabled and 'Créer une partie à plusieurs'
                         or 'Lancer de fer : créer une partie à plusieurs',
                     canInteract = function() return Free(pit) and pit.maxPlayers > 1 end,
                     onSelect = function() HS.Action(pit, 'creer') end,

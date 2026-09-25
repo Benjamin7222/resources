@@ -129,7 +129,7 @@ Config.Leaderboard = {
 
 Config.Blip = {
     enabled = true,
-    sprite = 'blip_horseshoe_0',
+    sprite = 1938782895,
     scale = 0.2,
     label = 'Lancer de fer',
 }
