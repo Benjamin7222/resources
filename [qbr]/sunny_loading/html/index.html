@@ -1,0 +1,38 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sunny — Chargement</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js" defer></script>
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <div class="landscape" aria-hidden="true"><div class="sun"></div><div class="ridge back"></div><div class="ridge front"></div></div>
+    <video id="background" autoplay muted playsinline aria-hidden="true"></video>
+    <div class="shade" aria-hidden="true"></div>
+    <audio id="music" autoplay preload="auto"></audio>
+    <main>
+        <h1 id="server-name">SUNNY</h1>
+        <nav aria-label="Liens du serveur">
+            <button type="button" data-link="rules">Règlement</button>
+            <button type="button" data-link="discord">Discord</button>
+            <button type="button" data-link="shop">Boutique</button>
+            <button type="button" data-link="tiktok">TikTok</button>
+        </nav>
+    </main>
+    <footer>
+        <div class="footer-top">
+            <div class="audio-panel"><button id="mute" type="button" aria-label="Couper le son" aria-pressed="false">♪</button><div><div class="track-controls"><button id="previous-track" type="button" aria-label="Musique précédente">‹</button><select id="track-select" aria-label="Choisir la musique"></select><button id="next-track" type="button" aria-label="Musique suivante">›</button></div><div class="volume-row"><label for="volume">Volume</label><input id="volume" type="range" min="0" max="100" value="30"><output id="volume-value" for="volume">30 %</output></div><div class="playback"><button id="play-audio" type="button" aria-label="Lancer la musique">Écouter</button><span id="audio-status" role="status">Prêt</span></div></div></div>
+        </div>
+        <div class="loading-label"><span id="loading-status">Chargement</span><span id="percentage">0 %</span></div>
+        <div id="progress" class="progress" role="progressbar" aria-label="Chargement du serveur" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="fill" class="fill"></div><div id="rider" class="rider" aria-hidden="true">
+            <img src="horse.svg" alt="" width="120" height="90">
+        </div></div>
+    </footer>
+    <dialog id="rules-dialog" aria-labelledby="rules-title"><div class="dialog-head"><span class="eyebrow">LE CODE DU TERRITOIRE</span><button id="close-rules" type="button" aria-label="Fermer le règlement">×</button></div><h2 id="rules-title">Règlement</h2><div id="rules-content"></div></dialog>
+    <div id="toast" role="status" hidden></div>
+</body>
+</html>
+

@@ -13,6 +13,8 @@ AddStateBagChangeHandler('SmallResources:Presence', 'global', function(_, _, val
 end)
 
 CreateThread(function()
+    SetDiscordAppId(Config.DiscordAppId)
+    lastPresence = nil
     -- Efface les anciens boutons ; aucun lien personnalise.
     SetDiscordRichPresenceAction(0, '', '')
     SetDiscordRichPresenceAction(1, '', '')

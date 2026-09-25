@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 110">
+<style>
+.body{animation:body .65s ease-in-out infinite}.front,.back{transform-origin:105px 54px;animation:stride .65s ease-in-out infinite alternate}.back{transform-origin:52px 57px;animation-delay:-.65s}.far{opacity:.5;animation-delay:-.65s}.tail{transform-origin:38px 42px;animation:tail .65s ease-in-out infinite alternate}@keyframes body{50%{transform:translateY(-3px)}}@keyframes stride{from{transform:rotate(-13deg)}to{transform:rotate(13deg)}}@keyframes tail{to{transform:rotate(-10deg)}}@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<g class="body" fill="#c9c5bc" stroke="#353a34" stroke-width=".8" stroke-linejoin="round">
+<path class="tail" fill="#77796f" d="M42 39C24 29 19 46 5 45C18 55 26 46 29 51C21 55 12 61 4 58C19 69 33 54 40 48Z"/>
+<path class="front far" d="M103 48Q108 62 115 68L128 82 126 86 122 85 109 73Q101 70 95 55Z"/>
+<path class="back far" d="M54 51L57 70 45 82 45 93 40 94 39 80 46 66 43 54Z"/>
+<path d="M36 40C44 31 58 33 69 37C79 40 93 38 99 31L109 17 111 9 116 15 121 9 122 19C129 23 130 28 138 32L146 38 145 44 139 47 127 40 123 37C118 45 118 55 109 61C99 68 84 64 73 62C61 59 49 65 40 59C33 54 32 46 36 40Z"/>
+<path class="front" d="M107 53C106 63 97 70 92 73L98 91 106 94 105 98 96 97 85 74C84 70 97 57 98 52Z"/>
+<path class="back" d="M47 54C45 64 36 68 29 70L22 87 15 90 13 87 18 82 23 65 37 52Z"/>
+<path fill="#646b61" d="M101 34C103 24 106 18 111 16L117 18C110 24 110 34 104 44L99 47 103 38 97 42Z"/>
+<path fill="none" stroke="#989f93" d="M44 42Q56 36 66 44M77 56Q95 62 104 47M116 27L127 35"/>
+<path fill="#f1eee5" stroke="none" d="M120 23L123 24 127 33 123 31Z"/>
+<circle cx="126" cy="28" r="1.3" fill="#1a211d" stroke="none"/>
+<path d="M140 39L142 40" stroke="#343e33" stroke-width="2"/>
+</g></svg>
