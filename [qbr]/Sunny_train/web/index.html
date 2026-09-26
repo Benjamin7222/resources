@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sunny Train</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Rye&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Gravures réutilisées (locomotive, sceau) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <pattern id="hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="4" stroke="currentColor" stroke-width="1" opacity=".55"/>
+            </pattern>
+            <pattern id="hatch-dense" width="2.5" height="2.5" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)">
+                <line x1="0" y1="0" x2="0" y2="2.5" stroke="currentColor" stroke-width="1" opacity=".7"/>
+            </pattern>
+
+            <symbol id="locomotive" viewBox="0 0 320 150">
+                <g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+                    <!-- fumée -->
+                    <g opacity=".5" stroke-width="1.4">
+                        <circle cx="70" cy="12" r="7"/>
+                        <circle cx="86" cy="8" r="9"/>
+                        <circle cx="106" cy="10" r="7"/>
+                        <circle cx="122" cy="6" r="5"/>
+                    </g>
+                    <!-- voie -->
+                    <line x1="4" y1="140" x2="316" y2="140"/>
+                    <g stroke-width="3" opacity=".6">
+                        <line x1="16" y1="143" x2="30" y2="143"/><line x1="46" y1="143" x2="60" y2="143"/>
+                        <line x1="76" y1="143" x2="90" y2="143"/><line x1="106" y1="143" x2="120" y2="143"/>
+                        <line x1="136" y1="143" x2="150" y2="143"/><line x1="166" y1="143" x2="180" y2="143"/>
+                        <line x1="196" y1="143" x2="210" y2="143"/><line x1="226" y1="143" x2="240" y2="143"/>
+                        <line x1="256" y1="143" x2="270" y2="143"/><line x1="286" y1="143" x2="300" y2="143"/>
+                    </g>
+                    <!-- chasse-pierres -->
+                    <path d="M18 134 L46 102 L50 102 L50 134 Z" fill="url(#hatch)"/>
+                    <line x1="26" y1="134" x2="46" y2="110"/><line x1="36" y1="134" x2="48" y2="120"/>
+                    <!-- boîte à fumée -->
+                    <rect x="48" y="70" width="24" height="42" rx="3" fill="url(#hatch-dense)"/>
+                    <!-- cheminée diabolo -->
+                    <path d="M58 70 L55 46 Q42 38 44 22 L80 22 Q82 38 69 46 L66 70 Z" fill="url(#hatch)"/>
+                    <line x1="44" y1="22" x2="80" y2="22" stroke-width="3"/>
+                    <!-- lanterne -->
+                    <rect x="36" y="50" width="16" height="15" rx="2"/>
+                    <circle cx="44" cy="57.5" r="4" fill="currentColor" opacity=".35"/>
+                    <path d="M34 50 L54 50 L50 45 L38 45 Z"/>
+                    <!-- chaudière -->
+                    <rect x="72" y="64" width="120" height="48" rx="5" fill="url(#hatch)"/>
+                    <line x1="102" y1="64" x2="102" y2="112"/><line x1="134" y1="64" x2="134" y2="112"/><line x1="166" y1="64" x2="166" y2="112"/>
+                    <!-- dômes & cloche -->
+                    <path d="M106 64 Q108 48 120 46 Q132 48 134 64" fill="url(#hatch-dense)"/>
+                    <path d="M150 64 Q152 54 158 53 Q164 54 166 64"/>
+                    <path d="M86 64 L86 58 Q90 52 94 58 L94 64"/>
+                    <!-- cabine -->
+                    <path d="M186 38 L250 38 L246 30 L190 30 Z" fill="url(#hatch-dense)"/>
+                    <rect x="192" y="38" width="52" height="74" fill="url(#hatch)"/>
+                    <rect x="203" y="50" width="28" height="22" rx="2" fill="#efe2c4"/>
+                    <line x1="217" y1="50" x2="217" y2="72"/>
+                    <!-- tender -->
+                    <rect x="250" y="78" width="64" height="38" rx="2" fill="url(#hatch)"/>
+                    <path d="M254 78 Q266 64 280 70 Q292 62 310 78" fill="url(#hatch-dense)"/>
+                    <!-- châssis -->
+                    <line x1="48" y1="116" x2="314" y2="116" stroke-width="3"/>
+                    <!-- roues porteuses -->
+                    <circle cx="70" cy="128" r="11"/><circle cx="70" cy="128" r="2" fill="currentColor"/>
+                    <circle cx="96" cy="128" r="11"/><circle cx="96" cy="128" r="2" fill="currentColor"/>
+                    <!-- roues motrices -->
+                    <g>
+                        <circle cx="130" cy="118" r="21"/><circle cx="130" cy="118" r="17" opacity=".5"/>
+                        <line x1="130" y1="97" x2="130" y2="139"/><line x1="109" y1="118" x2="151" y2="118"/>
+                        <line x1="115" y1="103" x2="145" y2="133"/><line x1="145" y1="103" x2="115" y2="133"/>
+                        <circle cx="130" cy="118" r="3.5" fill="currentColor"/>
+                    </g>
+                    <g>
+                        <circle cx="178" cy="118" r="21"/><circle cx="178" cy="118" r="17" opacity=".5"/>
+                        <line x1="178" y1="97" x2="178" y2="139"/><line x1="157" y1="118" x2="199" y2="118"/>
+                        <line x1="163" y1="103" x2="193" y2="133"/><line x1="193" y1="103" x2="163" y2="133"/>
+                        <circle cx="178" cy="118" r="3.5" fill="currentColor"/>
+                    </g>
+                    <line x1="130" y1="126" x2="178" y2="126" stroke-width="3.5"/>
+                    <line x1="84" y1="112" x2="130" y2="126" stroke-width="2.5"/>
+                    <!-- roues du tender -->
+                    <circle cx="264" cy="130" r="9"/><circle cx="264" cy="130" r="2" fill="currentColor"/>
+                    <circle cx="300" cy="130" r="9"/><circle cx="300" cy="130" r="2" fill="currentColor"/>
+                </g>
+            </symbol>
+
+            <symbol id="arrow" viewBox="0 0 60 18">
+                <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                    <line x1="2" y1="9" x2="54" y2="9"/>
+                    <path d="M46 3 L56 9 L46 15"/>
+                    <circle cx="6" cy="9" r="2" fill="currentColor"/>
+                </g>
+            </symbol>
+        </defs>
+    </svg>
+
+    <div id="app" class="hidden">
+        <div class="backdrop"></div>
+        <main class="ledger">
+            <span class="rivet tl"></span><span class="rivet tr"></span>
+            <span class="rivet bl"></span><span class="rivet br"></span>
+            <div class="sheet">
+                <aside class="spine" id="spine"></aside>
+                <section class="paper">
+                    <header class="masthead">
+                        <svg class="seal left" viewBox="0 0 100 100" aria-hidden="true">
+                            <defs><path id="sealPathL" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs>
+                            <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                            <text font-family="IM Fell English SC, Georgia, serif" font-size="9.5" letter-spacing="1.4" fill="currentColor">
+                                <textPath href="#sealPathL" class="seal-text"></textPath>
+                            </text>
+                            <text x="50" y="47" text-anchor="middle" font-family="Rye, Georgia, serif" font-size="15" fill="currentColor" class="seal-mono">SP</text>
+                            <text x="50" y="62" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="8" fill="currentColor" class="seal-year"></text>
+                        </svg>
+                        <div class="company" id="companyName"></div>
+                        <div class="motto" id="companyMotto"></div>
+                        <svg class="seal right" viewBox="0 0 100 100" aria-hidden="true">
+                            <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3"/>
+                            <use href="#locomotive" x="14" y="28" width="72" height="44"/>
+                            <text x="50" y="84" text-anchor="middle" font-family="IM Fell English SC, Georgia, serif" font-size="8" letter-spacing="1" fill="currentColor">EXPRESS</text>
+                        </svg>
+                    </header>
+                    <div class="rule"></div>
+                    <nav class="crumbs" id="crumbs"></nav>
+                    <div class="pages" id="pages"></div>
+                    <div class="telegraph" id="telegraph">
+                        <span class="dots"><i></i><i></i><i></i></span>
+                        <span>Transmission télégraphique</span>
+                    </div>
+                    <footer class="keys" id="keys">
+                        <span class="k kbd"><span class="keycap">&uarr; &darr;</span> Naviguer</span>
+                        <span class="k kbd"><span class="keycap">Entrée</span> Sélectionner</span>
+                        <span class="k kbd"><span class="keycap">Retour</span> Précédent</span>
+                        <span class="k kbd"><span class="keycap">Échap</span> Fermer</span>
+                        <span class="k pad"><span class="keycap">&uarr; &darr;</span> Naviguer</span>
+                        <span class="k pad"><span class="keycap round">A</span> Sélectionner</span>
+                        <span class="k pad"><span class="keycap round">B</span> Retour</span>
+                    </footer>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div id="hud" class="hud hidden"></div>
+    <div id="robbery" class="robbery hidden"></div>
+    <div id="toasts"></div>
+    <div id="notices"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

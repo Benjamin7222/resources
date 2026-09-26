@@ -12,6 +12,49 @@ QBShared.Jobs = {
             },
         },
 	},
+	['railroad'] = {
+		label = 'train',
+		defaultDuty = true,
+		offDutyPay = false,
+		grades = {
+            ['0'] = {
+                name = 'train',
+                payment = 10
+            },
+        },
+	},
+	['chemindefer'] = {
+		label = 'Compagnie de chemin de fer',
+		defaultDuty = true,
+		offDutyPay = false,
+		grades = {
+            ['0'] = {
+                name = 'Apprenti cheminot',
+                payment = 50
+            },
+			['1'] = {
+                name = 'Serre-frein',
+                payment = 65
+            },
+			['2'] = {
+                name = 'Chauffeur',
+                payment = 80
+            },
+			['3'] = {
+                name = 'Mécanicien',
+                payment = 100
+            },
+			['4'] = {
+                name = 'Chef de train',
+                payment = 120
+            },
+			['5'] = {
+                name = 'Directeur de la compagnie',
+				isboss = true,
+                payment = 150
+            },
+        },
+	},
 	['police'] = {
 		label = 'Forces de l\'ordre',
 		defaultDuty = true,

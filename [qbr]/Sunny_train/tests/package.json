@@ -1,0 +1,13 @@
+{
+  "name": "sunny-train-tests",
+  "private": true,
+  "scripts": {
+    "test": "node run.js && node run.js --deliveries",
+    "test:ui": "node ui-test.js",
+    "check": "node check.js .. && node --check ../web/app.js"
+  },
+  "devDependencies": {
+    "fengari": "0.1.4",
+    "puppeteer-core": "22.15.0"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "tool": "image_gen (outil intégré)",
+  "assets": [
+    {
+      "name": "train_coal",
+      "path": "C:\\Users\\benja\\.codex\\generated_images\\01a0dd8d-ba14-75f0-b651-46d31638b2ea\\exec-e7358a46-9dd7-4c99-9b99-1655bdbd1150.png",
+      "prompt": "Create one square inventory item image for a RedM western railroad game set in 1899: a small open burlap sack filled with rough locomotive coal lumps. Detailed monochrome product photograph, strictly black white and neutral grays, no color or sepia. Single isolated centered object, three-quarter view, generous transparent margins, genuinely transparent background, crisp readable silhouette at inventory thumbnail size. No text, no lettering, no watermark. PNG asset."
+    },
+    {
+      "name": "train_crate_corn",
+      "path": "C:\\Users\\benja\\.codex\\generated_images\\01a0dd8d-ba14-75f0-b651-46d31638b2ea\\exec-ac2aeee1-6ba7-49d6-97af-7c16e4211517.png",
+      "prompt": "Create one square inventory item image for a RedM western railroad game set in 1899: a small open wooden freight crate filled with ears of corn. Detailed monochrome product photograph, strictly black white and neutral grays, no color or sepia. Single isolated centered object, three-quarter view, generous transparent margins, genuinely transparent background, crisp readable silhouette at inventory thumbnail size. No text, no lettering, no watermark. PNG asset."
+    },
+    {
+      "name": "train_crate_tobacco",
+      "path": "C:\\Users\\benja\\.codex\\generated_images\\01a0dd8d-ba14-75f0-b651-46d31638b2ea\\exec-d093efc3-c4b9-46c5-b6bd-05ad647878ea.png",
+      "prompt": "Create one square inventory item image for a RedM western railroad game set in 1899: a small open wooden freight crate filled with bundles of dried tobacco leaves. Detailed monochrome product photograph, strictly black white and neutral grays, no color or sepia. Single isolated centered object, three-quarter view, generous transparent margins, genuinely transparent background, crisp readable silhouette at inventory thumbnail size. No text, no lettering, no watermark. PNG asset."
+    },
+    {
+      "name": "train_payroll",
+      "path": "C:\\Users\\benja\\.codex\\generated_images\\01a0dd8d-ba14-75f0-b651-46d31638b2ea\\exec-abce715b-88e2-4ca7-a0b6-97679e459877.png",
+      "prompt": "Create one square inventory item image for a RedM western railroad game set in 1899: a closed sturdy iron-banded wooden payroll chest with a padlock and wax seal, no writing. Detailed monochrome product photograph, strictly black white and neutral grays, no color or sepia. Single isolated centered object, three-quarter view, generous transparent margins, genuinely transparent background, crisp readable silhouette at inventory thumbnail size. No text, no lettering, no watermark. PNG asset."
+    },
+    {
+      "name": "train_crate_iron",
+      "path": "C:\\Users\\benja\\.codex\\generated_images\\01a0dd8d-ba14-75f0-b651-46d31638b2ea\\exec-bc0c00de-783b-4e60-9d49-c917612ac90e.png",
+      "prompt": "Create one square inventory item image for a RedM western railroad game set in 1899: a small open wooden freight crate holding neatly stacked iron ingots. Detailed monochrome product photograph, strictly black white and neutral grays, no color or sepia. Single isolated centered object, three-quarter view, generous transparent margins, genuinely transparent background, crisp readable silhouette at inventory thumbnail size. No text, no lettering, no watermark. PNG asset."
+    },
+    {
+      "name": "train_crate_scrap",
+      "path": "C:\\Users\\benja\\.codex\\generated_images\\01a0dd8d-ba14-75f0-b651-46d31638b2ea\\exec-3a70101b-7023-4cd8-81be-a93d57d3951b.png",
+      "prompt": "Create one square inventory item image for a RedM western railroad game set in 1899: a small open wooden freight crate holding assorted metal spare parts, bolts and short gears. Detailed monochrome product photograph, strictly black white and neutral grays, no color or sepia. Single isolated centered object, three-quarter view, generous transparent margins, genuinely transparent background, crisp readable silhouette at inventory thumbnail size. No text, no lettering, no watermark. PNG asset."
+    },
+    {
+      "name": "train_ticket",
+      "path": "C:\\Users\\benja\\.codex\\generated_images\\01a0dd8d-ba14-75f0-b651-46d31638b2ea\\exec-e1d22971-782d-4789-bed9-2ae82c526ba3.png",
+      "prompt": "Create one square inventory item image for a RedM western railroad game set in 1899: one vintage rectangular railroad paper ticket with decorative black borders, a small steam locomotive illustration and blank spaces, no text, no lettering. Detailed monochrome product photograph, strictly black white and neutral grays, no color or sepia. Single isolated centered object, three-quarter view, generous transparent margins, genuinely transparent background, crisp readable silhouette at inventory thumbnail size. No text, no lettering, no watermark. PNG asset."
+    },
+    {
+      "name": "sunny_material_coal",
+      "path": "C:\\Users\\benja\\.codex\\generated_images\\01a0dd8d-ba14-75f0-b651-46d31638b2ea\\exec-8aa137eb-8c56-4841-907b-05ad75719482.png",
+      "prompt": "Create one square inventory item image for a RedM western railroad game set in 1899: a small pile of raw coal rocks. Detailed monochrome product photograph, strictly black white and neutral grays, no color or sepia. Single isolated centered object, three-quarter view, generous transparent margins, genuinely transparent background, crisp readable silhouette at inventory thumbnail size. No text, no lettering, no watermark. PNG asset."
+    },
+    {
+      "name": "sunny_material_iron",
+      "path": "C:\\Users\\benja\\.codex\\generated_images\\01a0dd8d-ba14-75f0-b651-46d31638b2ea\\exec-e0a198ee-5a78-48e7-8398-11a927f7f879.png",
+      "prompt": "Create one square inventory item image for a RedM western railroad game set in 1899: two rough iron ore rocks. Detailed monochrome product photograph, strictly black white and neutral grays, no color or sepia. Single isolated centered object, three-quarter view, generous transparent margins, genuinely transparent background, crisp readable silhouette at inventory thumbnail size. No text, no lettering, no watermark. PNG asset."
+    },
+    {
+      "name": "sunny_material_copper",
+      "path": "C:\\Users\\benja\\.codex\\generated_images\\01a0dd8d-ba14-75f0-b651-46d31638b2ea\\exec-cc7ae688-6bd1-4ab9-af49-13945e3a41bb.png",
+      "prompt": "Create one square inventory item image for a RedM western railroad game set in 1899: two rough copper ore rocks with mineral texture, rendered entirely in neutral grayscale. Detailed monochrome product photograph, strictly black white and neutral grays, no color or sepia. Single isolated centered object, three-quarter view, generous transparent margins, genuinely transparent background, crisp readable silhouette at inventory thumbnail size. No text, no lettering, no watermark. PNG asset."
+    },
+    {
+      "name": "sunny_material_metalscrap",
+      "path": "C:\\Users\\benja\\.codex\\generated_images\\01a0dd8d-ba14-75f0-b651-46d31638b2ea\\exec-e89ece33-8696-4fb9-8a95-35de71fa176e.png",
+      "prompt": "Create one square inventory item image for a RedM western railroad game set in 1899: a small pile of worn scrap metal, bolts and bent metal pieces. Detailed monochrome product photograph, strictly black white and neutral grays, no color or sepia. Single isolated centered object, three-quarter view, generous transparent margins, genuinely transparent background, crisp readable silhouette at inventory thumbnail size. No text, no lettering, no watermark. PNG asset."
+    }
+  ]
+}
